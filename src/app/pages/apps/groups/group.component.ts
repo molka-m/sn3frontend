@@ -23,6 +23,7 @@ import {GroupService} from "../../../services/apps/Group/group.service";
     TablerIconsModule,
     CommonModule,
   ],
+  standalone: true
 })
 export class AppGroupComponent implements AfterViewInit, OnInit {
   @ViewChild(MatTable, {static: true}) table: MatTable<any> =
@@ -56,8 +57,8 @@ export class AppGroupComponent implements AfterViewInit, OnInit {
     this.groupService.findAllGroups().subscribe(
       (response: Group[]) => {
         this.groups = response;
-        this.dataSource.data = this.groups; // ✅ Correct way to update MatTableDataSource
-        this.dataSource = new MatTableDataSource(this.groups); // ✅ Ensuring table update
+        this.dataSource.data = this.groups; //Correct way to update MatTableDataSource
+        this.dataSource = new MatTableDataSource(this.groups); // Ensuring table update
       },
       (error) => {
         console.error("Error fetching Group:", error);

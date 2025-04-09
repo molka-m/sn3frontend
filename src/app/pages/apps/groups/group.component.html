@@ -5,7 +5,7 @@
         <mat-form-field appearance="outline" class="w-100 hide-hint">
           <input
             matInput
-            placeholder="Search Application"
+            placeholder="Search group"
             (keyup)="applyFilter($any($event.target).value)"
           />
           <mat-icon matSuffix>
@@ -14,9 +14,9 @@
         </mat-form-field>
       </div>
       <div class="col-lg-4 d-flex align-items-center justify-content-end">
-        <!-- add application -->
+        <!-- add group -->
         <button mat-flat-button (click)="openDialog('Add', {})" color="primary">
-          Add Application
+          Ajouter groupe
         </button>
       </div>
     </div>

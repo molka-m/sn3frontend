@@ -26,6 +26,7 @@ import {GroupService} from "../../../services/apps/Group/group.service";
     TablerIconsModule,
     CommonModule,
   ],
+  standalone: true
 })
 export class AppApplicationComponent implements AfterViewInit, OnInit {
   @ViewChild(MatTable, {static: true}) table: MatTable<any> =
@@ -37,6 +38,7 @@ export class AppApplicationComponent implements AfterViewInit, OnInit {
     'name',
     'Description',
     'CreationDate',
+    'Group',
     'action',
   ];
 
@@ -123,6 +125,7 @@ interface DialogData {
     TablerIconsModule,
   ],
   templateUrl: 'application-dialog-content.html',
+  standalone: true
 })
 // tslint:disable-next-line: component-class-suffix
 export class AppApplicationDialogContentComponent {
@@ -178,6 +181,7 @@ export class AppApplicationDialogContentComponent {
          this.openSnackBar('Employee Updated successfully!', 'Close');*/
 
     } else if (this.action === 'Assign' && this.application.applicationName && this.selectGroup.uuid) {
+      console.log(this.action)
       this.applicationService.affectGroupToApplication(this.application.applicationName, this.selectGroup.uuid).subscribe(
         () => {
           // Only close the dialog and show the snackbar after deletion succeeds

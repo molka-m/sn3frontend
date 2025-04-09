@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center justify-content-between m-b-16 p-x-20 p-t-16">
-  <h3>{{ action }} Application</h3>
+  <h3>{{ action }} Groupe</h3>
   <button
     mat-icon-button
     mat-dialog-close
@@ -9,8 +9,8 @@
   </button>
 </div>
 
-<!-- -------------------------------------------------------------- -->
-<!-- Add Employee -->
+<!-- ---------------------------------a----------------------------- -->
+<!-- Add group -->
 <!-- -------------------------------------------------------------- -->
 
 @if (action !== 'Delete') {
@@ -19,7 +19,7 @@
 
       <div class="row">
         <div >
-          <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Application Name</mat-label>
+          <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Nom du groupe</mat-label>
           <mat-form-field appearance="outline" class="w-100">
             <input
               type="text"
@@ -52,7 +52,7 @@
   </mat-dialog-content>
 }
 <!-- -------------------------------------------------------------- -->
-<!-- Delete Employee info -->
+<!-- Delete group info -->
 <!-- -------------------------------------------------------------- -->
 
 @else {
