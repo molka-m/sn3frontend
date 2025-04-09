@@ -1,0 +1,90 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="row justify-content-between gap-16">
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100 hide-hint">
+          <input
+            matInput
+            placeholder="Search here..."
+            (keyup)="applyFilter($event)"
+          />
+          <mat-icon matSuffix>
+            <i-tabler name="search" class="icon-20 d-flex m-t-2"></i-tabler>
+          </mat-icon>
+        </mat-form-field>
+        @if(collaborateur().length === 0){
+        <p>No contacts available.</p>
+        }
+      </div>
+<!--      <div hidden=true class="col-sm-6 d-flex align-items-center justify-content-end">
+        <button mat-flat-button (click)="openDialog('Add', {})" color="primary">
+          Add Contact
+        </button>
+      </div>-->
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="row">
+  @for(collab of collaborateur(); track collab.firstName ) {
+  <div class="col-sm-6 col-lg-4">
+    <mat-card class="cardWithShadow">
+      <mat-card-content class="text-center">
+        <img
+          src="{{ collab.imagePath }}"
+          class="rounded-circle border p-5"
+          width="100"
+        />
+        <div class="d-flex flex-col gap-20 m-t-16">
+          <div>
+            <h4 mat-card-title>
+              {{ collab.firstName }}
+            </h4>
+            <span class="f-s-12">{{ collab.role }}</span>
+          </div>
+          <div class="d-flex gap-8 justify-content-center">
+            <button mat-flat-button>Chat</button>
+            <button mat-flat-button class="bg-secondary text-white">
+              Follow
+            </button>
+          </div>
+          <span class="f-s-14"> {{ collab.email }}</span>
+          <span class="f-s-14"> Mo: {{ collab.phone }}</span>
+        </div>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+<!--
+      <div class="row">
+        <div class="col-4 p-y-12">
+          <a
+            href="#"
+            class="text-decoration-none f-s-14 f-w-500 d-flex justify-content-center align-items-center gap-4"
+          >
+            <i-tabler name="brand-instagram" class="icon-18 d-flex"></i-tabler>
+            {{ collab.contactinstagram }}
+          </a>
+        </div>
+        <div class="col-4 p-y-12">
+          <a
+            href="#"
+            class="text-decoration-none f-s-14 f-w-500 d-flex justify-content-center align-items-center gap-4"
+          >
+            <i-tabler name="brand-linkedin" class="icon-18 d-flex"></i-tabler>
+            {{ collab.contactlinkedin }}
+          </a>
+        </div>
+        <div class="col-4 p-y-12">
+          <a
+            href="#"
+            class="text-decoration-none f-s-14 f-w-500 d-flex justify-content-center align-items-center gap-4"
+          >
+            <i-tabler name="brand-facebook" class="icon-18 d-flex"></i-tabler>
+            {{ collab.contactfacebook }}
+          </a>
+        </div>
+      </div>
+-->
+    </mat-card>
+  </div>
+  }
+</div>

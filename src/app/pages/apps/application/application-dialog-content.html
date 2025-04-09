@@ -1,0 +1,122 @@
+<div class="d-flex align-items-center justify-content-between m-b-16 p-x-20 p-t-16">
+  <h3>{{ action }} Application</h3>
+  <button
+    mat-icon-button
+    mat-dialog-close
+    class="d-flex justify-content-center"
+  >
+    <i-tabler name="x" class="icon-20 d-flex"></i-tabler>
+  </button>
+</div>
+
+<!-- -------------------------------------------------------------- -->
+<!-- Add Employee -->
+<!-- -------------------------------------------------------------- -->
+
+@if (action === 'Add' || action === 'Update') {
+  <mat-dialog-content>
+    <form #applicatioForm="ngForm">
+
+      <div class="col-lg-12">
+        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Application Name</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            type="text"
+            matInput
+            required
+            id="application_name"
+            name="application_name"
+            [(ngModel)]="application.applicationName"
+            placeholder="Name"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-lg-12">
+        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Description</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+           <textarea
+             matInput
+             required
+             id="application_description"
+             name="application_description"
+             [(ngModel)]="application.applicationDescription"
+             placeholder="Enter description"
+             rows="4"
+           ></textarea>
+        </mat-form-field>
+      </div>
+      <button
+        mat-flat-button
+        (click)="doAction()"
+        mat-flat-button
+        [disabled]="!applicatioForm.valid"
+      >
+        {{ action }}
+      </button>
+      <button
+        mat-flat-button
+        class="m-l-8 bg-error text-white"
+        (click)="closeDialog()"
+      >
+        Cancel
+      </button>
+    </form>
+  </mat-dialog-content>
+} @else if (action === 'Assign') {
+  <mat-dialog-content>
+    <form #applicatioForm="ngForm">
+      <div class="col-lg-12">
+        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Group</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select
+            required
+            name="position"
+            id="position"
+            placeholder="Select Group"
+            [(ngModel)]="selectGroup"
+          >
+            <mat-option *ngFor="let group of groupes" [value]="group">
+              {{ group.groupName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <button
+        mat-flat-button
+        (click)="doAction()"
+        [disabled]="!applicatioForm.valid"
+      >
+        {{ action }}
+      </button>
+      <button
+        mat-flat-button
+        class="m-l-8 bg-error text-white"
+        (click)="closeDialog()"
+      >
+        Cancel
+      </button>
+    </form>
+  </mat-dialog-content>
+
+}
+<!-- -------------------------------------------------------------- -->
+<!-- Delete Employee info -->
+<!-- -------------------------------------------------------------- -->
+
+@else {
+  <div class="p-x-24 m-y-8">
+    <p class="f-s-14">
+      Sure to delete <span class="f-w-600">{{ application.applicationName }}</span> ?
+    </p>
+  </div>
+  <div mat-dialog-actions class="p-x-24 p-b-24">
+    <button (click)="doAction()" mat-flat-button>{{ action }}</button>
+    <button
+      mat-flat-button
+      (click)="closeDialog()"
+      class="m-l-8 bg-error text-white"
+    >
+      Cancel
+    </button>
+  </div>
+}
