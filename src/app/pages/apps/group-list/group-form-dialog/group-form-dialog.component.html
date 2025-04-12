@@ -14,10 +14,10 @@
   </div>
 
   <form>
-    <div class="file-input-container m-b-24 position-relative uploader">
+   <!-- <div class="file-input-container m-b-24 position-relative uploader" *ngIf="selectedUser">
       @if(imageUrl){
       <img
-        [src]="imageUrl"
+        [src]="selectedUser.imagePath"
         alt="Selected Image"
         width="100"
         class="rounded upload-image"
@@ -26,95 +26,108 @@
       <input type="file" (change)="onFileSelected($event)" accept="image/*" />
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
+    <div class="row" >
+
+     <div class="col-md-6" *ngIf="selectedUser">
         <mat-label class="f-s-14 f-w-600 m-b-8 d-block">First Name</mat-label>
         <mat-form-field appearance="outline" class="w-100">
           <input
             matInput
-            [(ngModel)]="contact.firstname"
+            [(ngModel)]="selectedUser.firstName"
             name="firstname"
             placeholder="First Name"
           />
         </mat-form-field>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6" *ngIf="selectedUser">
         <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Last Name</mat-label>
         <mat-form-field appearance="outline" class="w-100">
           <input
             matInput
-            [(ngModel)]="contact.lastname"
+            [(ngModel)]="selectedUser.lastName"
             name="lastname"
             placeholder="Last Name"
           />
         </mat-form-field>
       </div>
-      <div class="col-md-6">
-        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Company Name</mat-label>
+      <div class="col-md-6" *ngIf="selectedUser">
+        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Role</mat-label>
         <mat-form-field appearance="outline" class="w-100">
           <input
             matInput
-            [(ngModel)]="contact.company"
+            [(ngModel)]="selectedUser.role"
             name="company"
             placeholder="Company Name"
           />
         </mat-form-field>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6" *ngIf="selectedUser">
         <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Phone Number</mat-label>
         <mat-form-field appearance="outline" class="w-100">
           <input
             matInput
-            [(ngModel)]="contact.phone"
+            [(ngModel)]="selectedUser.phone"
             name="phone"
             placeholder="Phone Number"
           />
         </mat-form-field>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6" *ngIf="selectedUser">
         <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Email</mat-label>
         <mat-form-field appearance="outline" class="w-100">
           <input
             matInput
-            [(ngModel)]="contact.email"
+            [(ngModel)]="selectedUser.email"
             name="email"
             type="email"
             placeholder="Email"
           />
         </mat-form-field>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6" *ngIf="selectedUser">
         <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Address</mat-label>
         <mat-form-field appearance="outline" class="w-100">
           <input
             matInput
-            [(ngModel)]="contact.address"
+            [(ngModel)]="selectedUser.role"
             name="address"
             placeholder="Address"
           />
         </mat-form-field>
-      </div>
+      </div>-->
       <div class="col-12">
-        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Notes</mat-label>
-        <mat-form-field appearance="outline" class="w-100">
-          <textarea
-            matInput
-            [(ngModel)]="contact.notes"
-            name="notes"
-            placeholder="Notes"
-          ></textarea>
-        </mat-form-field>
+          <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Group</mat-label>
+          <mat-form-field appearance="outline" class="w-100">
+              <mat-select [(ngModel)]="selectedGroup" (selectionChange)="loadAllUsers()" name="group">
+                  @for(group of groups; track group.uuid) {
+                      <mat-option [value]="group">{{ group.groupName }}</mat-option>
+                  }
+              </mat-select>
+          </mat-form-field>
       </div>
+    <div class="row" >
       <div class="col-12">
-        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Department</mat-label>
+        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">List of users</mat-label>
         <mat-form-field appearance="outline" class="w-100">
-          <mat-select [(ngModel)]="contact.department" name="department">
-            @for(dept of departments; track dept.id) {
-            <mat-option [value]="dept.name">{{ dept.name }}</mat-option>
+          <mat-select [(ngModel)]="selectedUser"  name="user">
+            @for(user of users; track user.uuid) {
+              <mat-option [value]="user.firstName">{{ user.firstName }} {{ user.lastName }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
       </div>
+
+<!--      <div class="col-12">
+        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Percentage</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            [(ngModel)]="contact.address"
+            name="percentage"
+            placeholder="percentage"
+          />
+        </mat-form-field>
+      </div>-->
     </div>
   </form>
 </mat-dialog-content>

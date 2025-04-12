@@ -14,7 +14,7 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  getUserByEmail(email: string) : Observable<User> {
+  getUserByEmail(email: string): Observable<User> {
     return this.http.get<User>(`${this.backendUrl}/findByEmail/${email}`);
   }
 
@@ -24,6 +24,10 @@ export class UserService {
 
   findAllNonAdminUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.backendUrl}/all/nonadmin`);
+  }
+
+  findAllUserNonAssingedToGroup(uuid: string | undefined): Observable<User[]> {
+    return this.http.get<User[]>(`${this.backendUrl}/group/non-assing/` + uuid);
   }
 
 
@@ -42,5 +46,9 @@ export class UserService {
 
   unLockUserAccount(email: string): Observable<any> {
     return this.http.put<any>(`${this.backendUrl}/unLockAccount/` + email, null);
+  }
+
+  findByGroupUUID(uuid: string | undefined): Observable<User[]> {
+    return this.http.get<User[]>(`${this.backendUrl}/by-group/${uuid}`);
   }
 }

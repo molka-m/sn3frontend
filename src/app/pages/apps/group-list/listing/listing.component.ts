@@ -54,12 +54,14 @@ export class AppListingComponent implements OnInit, OnDestroy {
         this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
+
     searchTerm = signal<string>('');
     private mediaMatcher: MediaQueryList = matchMedia(`(max-width: 1199px)`);
 
     labels: Group[] = [];
+    selectedGroup: Group | null;
     selectedLabel: Group | null = null;
-    selectedContact = signal<User | null>(null);
+    selectedCollaborateur = signal<User | null>(null);
     isActiveContact: boolean = false;
     mailnav = true;
 
@@ -79,26 +81,13 @@ export class AppListingComponent implements OnInit, OnDestroy {
 
     filteredCollaborateur = computed(() => {
         let filtered = this.groupDisplayService.collaborateurList();
-        console.log(filtered);
-        const selected = this.groupDisplayService.selectedLabel();
-        /*        if (selected && selected.groupName !== 'All') {
-                    if (selected.groupName === 'Frequent') {
-                        filtered = filtered.filter((contact) => contact.frequentlycontacted);
-                    } else if (selected.groupName === 'Starred') {
-                        filtered = filtered.filter((contact) => contact.starred);
-                    } else {
-                        filtered = filtered.filter(
-                            (contact) => contact.department === selected.groupName
-                        );
-                    }
-                }*/
-
-        /*        const searchTermLower = this.searchTerm().toLowerCase();
-                filtered = filtered.filter(
-                    (collaborateur) =>
-                        collaborateur.firstName.toLowerCase().includes(searchTermLower) ||
-                        collaborateur.lastName.toLowerCase().includes(searchTermLower)
-                );*/
+        this.selectedGroup = this.groupDisplayService.selectedLabel();
+        console.log(this.selectedGroup);
+        if (this.selectedGroup !== null) {
+            this.userService.findByGroupUUID(this.selectedGroup?.uuid).subscribe(value => {
+                filtered = value;
+            });
+        }
         return filtered;
     });
 
@@ -110,21 +99,18 @@ export class AppListingComponent implements OnInit, OnDestroy {
             this.groupDisplayService.collaborateurList()
         );
         this.loadAllGroups();
-        this.loadAllUsers();
-        const collaborateur = this.groupDisplayService.collaborateurList();
-        this.selectedContact.set(collaborateur[0]);
-
         this.groupDisplayService.setLabelsFromApi(this.labels);
     }
 
+
     goBack() {
-        this.selectedContact.set(null);
+        this.selectedCollaborateur.set(null);
         this.isActiveContact = false;
     }
 
     selectContact(contact: User): void {
         this.isActiveContact = true;
-        this.selectedContact.set(contact);
+        this.selectedCollaborateur.set(contact);
         this.groupDisplayService.setSelectedCollaborateur(contact);
     }
 
@@ -149,11 +135,11 @@ export class AppListingComponent implements OnInit, OnDestroy {
             if (result) {
                 this.groupDisplayService.deleteCollaboraeur(Collab);
                 if (
-                    this.selectedContact() &&
-                    this.selectedContact()?.uuid === Collab.uuid
+                    this.selectedCollaborateur() &&
+                    this.selectedCollaborateur()?.uuid === Collab.uuid
                 ) {
                     this.groupDisplayService.setSelectedCollaborateur(null);
-                    this.selectedContact.set(null);
+                    this.selectedCollaborateur.set(null);
                 }
                 this.snackBar.open(
                     `${Collab.firstName} ${Collab.lastName} deleted successfully!`,
@@ -180,7 +166,7 @@ export class AppListingComponent implements OnInit, OnDestroy {
                     ...this.groupDisplayService.collaborateurList(),
                 ]);
                 this.groupDisplayService.setSelectedCollaborateur(result);
-                this.selectedContact.set(result);
+                this.selectedCollaborateur.set(result);
             }
         });
     }
@@ -190,6 +176,7 @@ export class AppListingComponent implements OnInit, OnDestroy {
             (response: Group[]) => {
                 this.labels = response;
                 this.groupDisplayService.labels.set(response);
+                this.applyLabel(response[0]);
             },
             (error: any) => {
                 console.error('Error fetching Groups:', error);
