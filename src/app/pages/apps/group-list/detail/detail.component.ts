@@ -1,16 +1,17 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
-import { MatDividerModule } from '@angular/material/divider';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { GroupDisplayService } from 'src/app/services/apps/group-list/group-display.service';
-import { AppDeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { GroupBox } from 'src/app/pages/apps/group-list/group-list';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { MaterialModule } from 'src/app/material.module';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgScrollbarModule } from 'ngx-scrollbar';
+import {Component, computed, OnInit, signal} from '@angular/core';
+import {MatDividerModule} from '@angular/material/divider';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {GroupDisplayService} from 'src/app/services/apps/group-list/group-display.service';
+import {AppDeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {TablerIconsModule} from 'angular-tabler-icons';
+import {MaterialModule} from 'src/app/material.module';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {NgScrollbarModule} from 'ngx-scrollbar';
 import {User} from "../../../../services/models/user";
+import {GroupService} from "../../../../services/apps/Group/group.service";
+
 @Component({
   selector: 'app-detail',
   imports: [
@@ -32,24 +33,27 @@ export class AppContactListDetailComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private groupDisplayService: GroupDisplayService,
+    private groupService: GroupService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+  }
 
+  listUUids: string[] = []
   departments = [
-    { id: 1, name: 'Sales' },
-    { id: 2, name: 'Support' },
-    { id: 2, name: 'Engineering' },
+    {id: 1, name: 'Sales'},
+    {id: 2, name: 'Support'},
+    {id: 2, name: 'Engineering'},
   ];
 
   ngOnInit(): void {
     this.groupDisplayService.selectedContact$.subscribe((contact) => {
       this.collaborateur.set(contact);
-      this.formData.set(contact ? { ...contact } : null);
+      this.formData.set(contact ? {...contact} : null);
     });
   }
 
   toggleStarred(collaborateur: User | null, event: Event): void {
-    if(collaborateur){
+    if (collaborateur) {
       this.groupDisplayService.toggleStarred(collaborateur, event);
       this.groupDisplayService.updateCollaborateur(collaborateur);
     }
@@ -73,18 +77,18 @@ export class AppContactListDetailComponent implements OnInit {
 
   cancelEdit(): void {
     this.isEditing.set(false);
-    this.formData.set(this.collaborateur() ? { ...this.collaborateur() } : null);
+    this.formData.set(this.collaborateur() ? {...this.collaborateur()} : null);
   }
 
   deleteCollaborateur(collaborateur: User | null): void {
     if (collaborateur) {
+      this.groupService
       const dialogRef = this.dialog.open(AppDeleteDialogComponent, {
         width: '300px',
         data: {
           message: `Are you sure you want to delete ${collaborateur.firstName} ${collaborateur.lastName}?`,
         },
       });
-
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           this.groupDisplayService.deleteCollaboraeur(collaborateur);

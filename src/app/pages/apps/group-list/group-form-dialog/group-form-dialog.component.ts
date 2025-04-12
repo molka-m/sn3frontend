@@ -9,6 +9,7 @@ import {User} from "../../../../services/models/user";
 import {UserService} from "../../../../services/apps/user/user.service";
 import {GroupService} from "../../../../services/apps/Group/group.service";
 import {Group} from "../../../../services/models/group";
+import {GroupDisplayService} from "../../../../services/apps/group-list/group-display.service";
 
 @Component({
   selector: 'app-group-form-dialog',
@@ -46,6 +47,7 @@ export class GroupFormDialogComponent {
     private snackBar: MatSnackBar,
     private userService: UserService,
     private groupService: GroupService,
+    private groupDisplayService: GroupDisplayService,
   ) {
     this.loadAllGroups();
   }
@@ -56,11 +58,12 @@ export class GroupFormDialogComponent {
     }
     this.groupService.affectMultiUserToGroup(this.selectedGroup.groupName, this.listUuid).subscribe(() => {
       // Only close the dialog and show the snackbar after deletion succeeds
-      this.dialogRef.close({event: 'Assing'});
-      this.openSnackBar('user assigned successfully!', 'Close');
       this.listUuid = [];
 
     })
+    this.dialogRef.close();
+    this.openSnackBar('user assigned successfully!', 'Close');
+    this.groupDisplayService.applyLabel(this.selectedGroup)
   }
 
   openSnackBar(message: string, action: string) {

@@ -58,7 +58,7 @@
             }
           </mat-nav-list>
         </div>-->
-        <h5 class="m-0 p-t-16 p-x-32 f-s-14 f-w-600 b-t-1">Categories</h5>
+        <h5 class="m-0 p-t-16 p-x-32 f-s-14 f-w-600 b-t-1">Groups</h5>
         <mat-nav-list>
           @for (lab of groupDisplayService.labels(); track lab.uuid) {
             <mat-list-item
@@ -99,7 +99,7 @@
               <mat-form-field appearance="outline" class="w-100 hide-hint">
                 <input
                   matInput
-                  placeholder="Search Contacts"
+                  placeholder="Search collaborateur"
                   [(ngModel)]="searchTerm"
                   (ngModelChange)="searchTerm.set($event)"
                 />

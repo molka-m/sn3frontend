@@ -30,6 +30,10 @@ export class GroupService {
   }
 
   affectMultiUserToGroup(groupName: string | undefined, uuids: string[] | undefined): Observable<any> {
-    return this.http.post<any>(`${this.backendUrl}/addusers/`+ groupName , uuids );
+    return this.http.post<any>(`${this.backendUrl}/addusers/` + groupName, uuids);
+  }
+
+  removeUserFromGroup(groupName: string | undefined, uuids: string[] | undefined): Observable<any> {
+    return this.http.post<any>(`${this.backendUrl}/removemultiuser/` + groupName, uuids);
   }
 }
