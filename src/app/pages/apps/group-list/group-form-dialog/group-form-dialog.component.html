@@ -95,7 +95,8 @@
           />
         </mat-form-field>
       </div>-->
-      <div class="col-12">
+    <div class="row" >
+    <div class="col-12">
           <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Group</mat-label>
           <mat-form-field appearance="outline" class="w-100">
               <mat-select [(ngModel)]="selectedGroup" (selectionChange)="loadAllUsers()" name="group">
@@ -105,13 +106,12 @@
               </mat-select>
           </mat-form-field>
       </div>
-    <div class="row" >
       <div class="col-12">
         <mat-label class="f-s-14 f-w-600 m-b-8 d-block">List of users</mat-label>
         <mat-form-field appearance="outline" class="w-100">
           <mat-select [(ngModel)]="selectedUser"  name="user">
             @for(user of users; track user.uuid) {
-              <mat-option [value]="user.firstName">{{ user.firstName }} {{ user.lastName }}</mat-option>
+              <mat-option [value]="user">{{ user.firstName }} {{ user.lastName }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
@@ -135,10 +135,10 @@
   <button
     mat-flat-button
     color="primary"
-    (click)="saveContact()"
+    (click)="assingUserToGroup()"
     [disabled]="!isFormValid()"
   >
-    Add Contact
+    Assign user
   </button>
   <button mat-flat-button class="bg-error text-white" (click)="cancel()">
     Cancel

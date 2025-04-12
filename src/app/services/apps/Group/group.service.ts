@@ -28,4 +28,8 @@ export class GroupService {
     console.log("delete method")
     return this.http.delete<any>(`${this.backendUrl}/delete/` + groupName);
   }
+
+  affectMultiUserToGroup(groupName: string | undefined, uuids: string[] | undefined): Observable<any> {
+    return this.http.post<any>(`${this.backendUrl}/addusers/`+ groupName , uuids );
+  }
 }

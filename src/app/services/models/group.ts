@@ -1,5 +1,4 @@
 import {Application} from "./application";
-import {Category} from "../../pages/apps/group-list/listing/categories";
 
 export interface Group {
   groupName?: string;
