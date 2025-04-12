@@ -2,45 +2,45 @@
   <!-- ------------------------------------------------------------------ -->
   <!-- If contact is selected -->
   <!-- ------------------------------------------------------------------ -->
-  @if( selectedContact()) {
+  @if( selectedCollaborateur()) {
   <div class="d-flex align-items-center justify-content-between p-x-24 p-y-16">
-    <h5 class="f-w-600 f-s-18">Contact Details</h5>
+    <h5 class="f-w-600 f-s-18">Collaborateur Details</h5>
 
     <!-- contact actions -->
     <div class="d-flex align-items-center">
       <button
         class="d-flex align-items-center justify-content-center"
-        [matTooltip]="contact()?.starred ? 'Unstar' : 'Star'"
+        [matTooltip]="collaborateur()?.email ? 'Unstar' : 'Star'"
         mat-icon-button
-        (click)="toggleStarred(contact(), $event)"
+        (click)="toggleStarred(collaborateur(), $event)"
       >
-        @if(contact()?.starred){
+<!--        @if(collaborateur()?.starred){
         <i-tabler
           name="star"
           class="icon-18 d-flex align-items-center fill-warning"
         ></i-tabler>
-        } @else {
+        } @else {-->
         <i-tabler
           name="star"
           class="icon-18 d-flex align-items-center"
         ></i-tabler>
-        }
+<!--        }-->
       </button>
-      <button
+<!--      <button
         class="d-flex align-items-center justify-content-center"
         [matTooltip]="isEditing() ? 'Save' : 'Edit'"
         mat-icon-button
-        (click)="isEditing() ? saveContact() : editContact()"
+        (click)="isEditing() ? saveCollaborateur() : editCollaborateur()"
       >
         <i-tabler
           [name]="isEditing() ? 'device-floppy' : 'pencil'"
           class="icon-18 d-flex align-items-center"
         ></i-tabler>
-      </button>
+      </button>-->
       <button
         class="d-flex align-items-center justify-content-center"
         mat-icon-button
-        (click)="deleteContact(contact())"
+        (click)="deleteCollaborateur(collaborateur())"
         matTooltip="Delete"
       >
         <i-tabler
@@ -57,13 +57,13 @@
   <!-- ------------------------------------------------------------------ -->
   <!--  Contact in List View  -->
   <!-- ------------------------------------------------------------------ -->
-  @if(selectedContact()) {
+  @if(selectedCollaborateur()) {
   <ng-scrollbar class="position-relative" style="height: calc(100vh - 380px)">
-    @if(!isEditing() && contact()) {
+    @if(!isEditing() && collaborateur()) {
     <div class="p-24">
       <div class="d-flex align-items-center gap-16">
         <img
-          [src]="contact().image"
+          [src]="collaborateur()?.imagePath"
           class="rounded-circle"
           alt="userimg"
           width="72px"
@@ -71,13 +71,13 @@
         />
         <div>
           <h5 class="f-w-600 f-s-16">
-            {{ contact().firstname }}
+            {{ collaborateur()?.role }}
           </h5>
           <span class="f-w-400 f-s-12">
-            {{ contact().department }}
+            {{ collaborateur()?.lastName }}
           </span>
           <span class="f-w-400 f-s-12">
-            {{ contact().company }}
+            {{ collaborateur()?.firstName }}
           </span>
         </div>
       </div>
@@ -85,48 +85,48 @@
         <div class="col-lg-6 m-t-32">
           <span class="f-s-12">Phone Number</span>
           <h5 class="f-w-600 lh-sm f-s-14">
-            {{ contact().phone }}
+            {{ collaborateur()?.phone }}
           </h5>
         </div>
         <div class="col-lg-6 m-t-32">
           <span class="f-s-12">Email address</span>
           <h5 class="f-w-600 lh-sm f-s-14">
-            {{ contact().email }}
+            {{ collaborateur()?.email }}
           </h5>
         </div>
         <div class="col-12 m-t-32">
           <span class="f-s-12">Address</span>
           <h5 class="f-w-600 lh-sm f-s-14">
-            {{ contact().address }}
+            {{ collaborateur()?.DateOfJoining }}
           </h5>
         </div>
         <div class="col-lg-6 m-t-32">
           <span class="f-s-12">Department</span>
           <h5 class="f-w-600 lh-sm f-s-14">
-            {{ contact().department }}
+            {{ collaborateur()?.DateOfJoining }}
           </h5>
         </div>
         <div class="col-lg-6 m-t-32">
           <span class="f-s-12">Company</span>
           <h5 class="f-w-600 lh-sm f-s-14">
-            {{ contact().company }}
+            {{ collaborateur()?.DateOfJoining }}
           </h5>
         </div>
         <div class="col-12 m-t-32">
           <span class="f-s-12">Notes</span>
-          <h5 class="f-w-400 f-s-14">{{ contact().notes }}</h5>
+          <h5 class="f-w-400 f-s-14">{{ collaborateur()?.DateOfJoining }}</h5>
         </div>
       </div>
     </div>
     <mat-divider></mat-divider>
     <div class="p-24 d-flex align-items-center gap-8">
-      <button mat-flat-button color="primary" (click)="editContact()">
+      <button mat-flat-button color="primary" (click)="editCollaborateur()">
         Edit
       </button>
       <button
         mat-flat-button
         class="bg-error"
-        (click)="deleteContact(contact())"
+        (click)="deleteCollaborateur(collaborateur())"
       >
         Delete
       </button>
@@ -141,7 +141,7 @@
     <div class="p-24">
       <div class="m-t-10">
         <div>
-          <form (ngSubmit)="saveContact()">
+          <form (ngSubmit)="saveCollaborateur()">
             <mat-label class="f-s-14 f-w-600 m-b-8 d-block"
               >First Name</mat-label
             >

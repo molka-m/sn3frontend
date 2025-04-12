@@ -1,3 +1,5 @@
+import {Group} from "../../../../services/models/group";
+
 export interface Category {
   id: number;
   name: string;
@@ -33,7 +35,7 @@ export const filter = [
   },
 ];
 
-export const label: Category[] = [
+/*export const label: Group[] = [
   {
     id: 701,
     name: 'Engineering',
@@ -58,4 +60,4 @@ export const label: Category[] = [
     color: '#FA896B',
     active: false,
   },
-];
+];*/

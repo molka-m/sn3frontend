@@ -1,231 +1,214 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  computed,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { Category, filter, label } from './categories';
-import { AppContactListDetailComponent } from '../detail/detail.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { GroupFormDialogComponent } from '../group-form-dialog/group-form-dialog.component';
-import { MaterialModule } from 'src/app/material.module';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { NgScrollbarModule } from 'ngx-scrollbar';
-import { MediaMatcher } from '@angular/cdk/layout';
-import { ContactService } from 'src/app/services/apps/contact-list/contact-list.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { GroupBox } from 'src/app/pages/apps/group-list/group-list';
-
-import { AppDeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { AppSearchDialogComponent } from 'src/app/layouts/full/vertical/header/header.component';
-import { CommonModule } from '@angular/common';
-import { MatDividerModule } from '@angular/material/divider';
+import {ChangeDetectorRef, Component, computed, inject, OnDestroy, OnInit, signal,} from '@angular/core';
+import {AppContactListDetailComponent} from '../detail/detail.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
+import {GroupFormDialogComponent} from '../group-form-dialog/group-form-dialog.component';
+import {MaterialModule} from 'src/app/material.module';
+import {TablerIconsModule} from 'angular-tabler-icons';
+import {NgScrollbarModule} from 'ngx-scrollbar';
+import {MediaMatcher} from '@angular/cdk/layout';
+import {GroupDisplayService} from 'src/app/services/apps/group-list/group-display.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {AppDeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
+import {AppSearchDialogComponent} from 'src/app/layouts/full/vertical/header/header.component';
+import {CommonModule} from '@angular/common';
+import {MatDividerModule} from '@angular/material/divider';
+import {Group} from '../../../../services/models/group';
+import {GroupService} from '../../../../services/apps/Group/group.service';
+import {UserService} from "../../../../services/apps/user/user.service";
+import {User} from "../../../../services/models/user";
 
 @Component({
-  selector: 'app-group-listing',
-  imports: [
-    CommonModule,
-    FormsModule,
-    AppContactListDetailComponent,
-    MaterialModule,
-    ReactiveFormsModule,
-    TablerIconsModule,
-    NgScrollbarModule,
-    CommonModule,
-    MatDividerModule,
-  ],
-  templateUrl: './listing.component.html',
+    selector: 'app-group-listing',
+    imports: [
+        CommonModule,
+        FormsModule,
+        AppContactListDetailComponent,
+        MaterialModule,
+        ReactiveFormsModule,
+        TablerIconsModule,
+        NgScrollbarModule,
+        MatDividerModule,
+    ],
+    templateUrl: './listing.component.html',
 })
 export class AppListingComponent implements OnInit, OnDestroy {
-  mobileQuery: MediaQueryList;
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
 
-  private _mobileQueryListener: () => void;
-
-  constructor(
-    public dialog: MatDialog,
-    public contactService: ContactService,
-    private snackBar: MatSnackBar
-  ) {
-    const changeDetectorRef = inject(ChangeDetectorRef);
-    const media = inject(MediaMatcher);
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
-  }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
-  }
-
-  searchTerm = signal<string>('');
-  private mediaMatcher: MediaQueryList = matchMedia(`(max-width: 1199px)`);
-  filters: Category[] = [];
-  labels: Category[] = [];
-  selectedFilter: Category | null = null;
-  selectedCategory: Category | null = null;
-  selectedContact = signal<GroupBox | null>(null);
-  isActiveContact: boolean = false;
-
-  mailnav = true;
-
-  isOver(): boolean {
-    return this.mediaMatcher.matches;
-  }
-
-  openDialog() {
-    const dialogRef = this.dialog.open(AppSearchDialogComponent, {
-      autoFocus: false,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
-
-  filteredContacts = computed(() => {
-    let filtered = this.contactService.contactList();
-
-    // Apply category filter if selected
-    if (
-      this.contactService.selectedCategory() &&
-      this.contactService.selectedCategory()?.name !== 'All'
+    constructor(
+        public dialog: MatDialog,
+        public groupDisplayService: GroupDisplayService,
+        private snackBar: MatSnackBar,
+        private groupService: GroupService,
+        private userService: UserService,
     ) {
-      filtered = filtered.filter(
-        (contact) =>
-          contact.department === this.contactService.selectedCategory()?.name
-      );
+        const changeDetectorRef = inject(ChangeDetectorRef);
+        const media = inject(MediaMatcher);
+        this.mobileQuery = media.matchMedia('(max-width: 600px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
-    // Apply filter based on selectedFilter only if no category is selected
-    if (
-      !this.contactService.selectedCategory() ||
-      this.contactService.selectedCategory()?.name === 'All'
-    ) {
-      if (this.contactService.selectedFilter()) {
-        if (this.contactService.selectedFilter()?.name === 'Frequent') {
-          filtered = filtered.filter((contact) => contact.frequentlycontacted);
-        } else if (this.contactService.selectedFilter()?.name === 'Starred') {
-          filtered = filtered.filter((contact) => contact.starred);
-        }
-      }
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
     }
 
-    // Apply search term filter
-    const searchTermLower = this.searchTerm().toLowerCase();
-    filtered = filtered.filter(
-      (contact) =>
-        contact.firstname.toLowerCase().includes(searchTermLower) ||
-        contact.lastname.toLowerCase().includes(searchTermLower)
-    );
-    return filtered;
-  });
+    searchTerm = signal<string>('');
+    private mediaMatcher: MediaQueryList = matchMedia(`(max-width: 1199px)`);
 
-  ngOnInit() {
-    // Set up the data after the service has been initialized
+    labels: Group[] = [];
+    selectedLabel: Group | null = null;
+    selectedContact = signal<User | null>(null);
+    isActiveContact: boolean = false;
+    mailnav = true;
 
-    this.filters = this.contactService.filters();
-    this.labels = this.contactService.labels();
-    this.selectedFilter = this.contactService.selectedFilter();
-    this.selectedCategory = this.contactService.selectedCategory();
-
-    this.contactService.contactList.set(this.contactService.contactList());
-
-    // Set the selected contact to the first contact if available
-    const contacts = this.contactService.contactList();
-    this.selectedContact.set(contacts[0]);
-
-    // Initialize labels and filters from the data file
-    this.contactService.labels.set(label);
-    this.contactService.filters.set(filter);
-
-    // Set the first filter as active by default
-    const firstFilter = this.contactService.filters()[0];
-    if (firstFilter) {
-      this.contactService.selectedFilter.set(firstFilter);
-      this.contactService.filters.set(
-        this.contactService
-          .filters()
-          .map((f) => ({ ...f, active: f === firstFilter }))
-      );
+    isOver(): boolean {
+        return this.mediaMatcher.matches;
     }
-  }
 
-  goBack() {
-    this.selectedContact.set(null);
-    this.isActiveContact = false;
-  }
-  selectContact(contact: GroupBox): void {
-    this.isActiveContact = true;
-    this.selectedContact.set(contact);
-    this.contactService.setSelectedContact(contact);
-  }
+    openDialog() {
+        const dialogRef = this.dialog.open(AppSearchDialogComponent, {
+            autoFocus: false,
+        });
 
-  applyFilter(filter: Category): void {
-    this.contactService.applyFilter(filter);
-  }
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log(`Dialog result: ${result}`);
+        });
+    }
 
-  applyCategory(category: Category): void {
-    this.contactService.applyCategory(category);
-  }
+    filteredCollaborateur = computed(() => {
+        let filtered = this.groupDisplayService.collaborateurList();
+        console.log(filtered);
+        const selected = this.groupDisplayService.selectedLabel();
+        /*        if (selected && selected.groupName !== 'All') {
+                    if (selected.groupName === 'Frequent') {
+                        filtered = filtered.filter((contact) => contact.frequentlycontacted);
+                    } else if (selected.groupName === 'Starred') {
+                        filtered = filtered.filter((contact) => contact.starred);
+                    } else {
+                        filtered = filtered.filter(
+                            (contact) => contact.department === selected.groupName
+                        );
+                    }
+                }*/
 
-  toggleStarred(contact: GroupBox, $event: any): void {
-    this.contactService.toggleStarred(contact, $event);
-  }
-
-  deleteContact(contact: GroupBox): void {
-    const dialogRef = this.dialog.open(AppDeleteDialogComponent, {
-      width: '300px',
-      autoFocus: false,
-      data: {
-        message: `Are you sure you want to delete ${contact.firstname} ${contact.lastname}?`,
-      },
+        /*        const searchTermLower = this.searchTerm().toLowerCase();
+                filtered = filtered.filter(
+                    (collaborateur) =>
+                        collaborateur.firstName.toLowerCase().includes(searchTermLower) ||
+                        collaborateur.lastName.toLowerCase().includes(searchTermLower)
+                );*/
+        return filtered;
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // Delete the contact
-        this.contactService.deleteContact(contact);
-        // Check if the deleted contact was selected and clear selection if so
-        if (
-          this.selectedContact() &&
-          this.selectedContact()?.id === contact.id
-        ) {
-          this.contactService.setSelectedContact(null);
-          this.selectedContact.set(null);
-        }
-        this.snackBar.open(
-          `${contact.firstname} ${contact.lastname} deleted successfully!`,
-          'Close',
-          {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top',
-          }
+    ngOnInit() {
+        this.labels = this.groupDisplayService.labels();
+        this.selectedLabel = this.groupDisplayService.selectedLabel();
+
+        this.groupDisplayService.collaborateurList.set(
+            this.groupDisplayService.collaborateurList()
         );
-      }
-    });
-  }
+        this.loadAllGroups();
+        this.loadAllUsers();
+        const collaborateur = this.groupDisplayService.collaborateurList();
+        this.selectedContact.set(collaborateur[0]);
 
-  openAddContactDialog(): void {
-    const dialogRef = this.dialog.open(GroupFormDialogComponent, {
-      width: '400px',
-      autoFocus: false,
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.contactService.contactList.set([
-          result,
-          ...this.contactService.contactList(),
-        ]);
+        this.groupDisplayService.setLabelsFromApi(this.labels);
+    }
 
-        this.contactService.setSelectedContact(result);
-        this.selectedContact.set(result);
-      }
-    });
-  }
+    goBack() {
+        this.selectedContact.set(null);
+        this.isActiveContact = false;
+    }
+
+    selectContact(contact: User): void {
+        this.isActiveContact = true;
+        this.selectedContact.set(contact);
+        this.groupDisplayService.setSelectedCollaborateur(contact);
+    }
+
+    applyLabel(group: Group): void {
+        this.groupDisplayService.applyLabel(group);
+    }
+
+    toggleStarred(collaborateur: User, $event: any): void {
+        this.groupDisplayService.toggleStarred(collaborateur, $event);
+    }
+
+    deleteContact(Collab: User): void {
+        const dialogRef = this.dialog.open(AppDeleteDialogComponent, {
+            width: '300px',
+            autoFocus: false,
+            data: {
+                message: `Are you sure you want to delete ${Collab.firstName} ${Collab.lastName}?`,
+            },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.groupDisplayService.deleteCollaboraeur(Collab);
+                if (
+                    this.selectedContact() &&
+                    this.selectedContact()?.uuid === Collab.uuid
+                ) {
+                    this.groupDisplayService.setSelectedCollaborateur(null);
+                    this.selectedContact.set(null);
+                }
+                this.snackBar.open(
+                    `${Collab.firstName} ${Collab.lastName} deleted successfully!`,
+                    'Close',
+                    {
+                        duration: 3000,
+                        horizontalPosition: 'center',
+                        verticalPosition: 'top',
+                    }
+                );
+            }
+        });
+    }
+
+    openAddContactDialog(): void {
+        const dialogRef = this.dialog.open(GroupFormDialogComponent, {
+            width: '400px',
+            autoFocus: false,
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.groupDisplayService.collaborateurList.set([
+                    result,
+                    ...this.groupDisplayService.collaborateurList(),
+                ]);
+                this.groupDisplayService.setSelectedCollaborateur(result);
+                this.selectedContact.set(result);
+            }
+        });
+    }
+
+    loadAllGroups(): void {
+        this.groupService.findAllGroups().subscribe(
+            (response: Group[]) => {
+                this.labels = response;
+                this.groupDisplayService.labels.set(response);
+            },
+            (error: any) => {
+                console.error('Error fetching Groups:', error);
+            }
+        );
+    }
+
+    loadAllUsers(): void {
+        this.userService.findAllNonAdminUsers().subscribe(
+            (response: User[]) => {
+                this.groupDisplayService.setCollaborateurs(response); // Set the full list
+                if (response.length > 0) {
+                    this.groupDisplayService.setSelectedCollaborateur(response[0]); // Set first user as selected
+                }
+            },
+            (error) => {
+                console.error("Error fetching users:", error);
+            }
+        );
+    }
+
 }

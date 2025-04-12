@@ -36,7 +36,7 @@
         style="height: calc(100vh - 380px)"
         class="position-relative"
       >
-        <div class="p-16">
+<!--        <div class="p-16">
           <mat-nav-list>
             @for(fil of contactService.filters();track fil.id) {
             <mat-list-item
@@ -57,34 +57,32 @@
             </mat-list-item>
             }
           </mat-nav-list>
-        </div>
+        </div>-->
         <h5 class="m-0 p-t-16 p-x-32 f-s-14 f-w-600 b-t-1">Categories</h5>
-        <div class="p-16">
-          <mat-nav-list>
-            @for(lab of contactService.labels();track lab.id){
+        <mat-nav-list>
+          @for (lab of groupDisplayService.labels(); track lab.uuid) {
             <mat-list-item
               role="listitem"
               [ngClass]="{
-                'bg-light-primary':
-                  lab.id === contactService.selectedCategory()?.id
-              }"
-              (click)="applyCategory(lab)"
+        'bg-light-primary': lab.uuid === groupDisplayService.selectedLabel()?.uuid
+      }"
+              (click)="applyLabel(lab)"
               class="m-b-2 gap-10"
             >
-              <span matListItemIcon class="m-r-0">
-                <i-tabler
-                  name="{{ lab.icon }}"
-                  [style.color]="lab.color"
-                  class="icon-18"
-                ></i-tabler>
-              </span>
-              <span class="f-w-400 f-s-14" matListItemTitle>{{
-                lab.name
-              }}</span>
+      <span matListItemIcon class="m-r-0">
+        <i-tabler
+          name="folder"
+          [style.color]="lab.color"
+          class="icon-18"
+        ></i-tabler>
+      </span>
+              <span class="f-w-400 f-s-14" matListItemTitle>
+        {{ lab.groupName }}
+      </span>
             </mat-list-item>
-            }
-          </mat-nav-list>
-        </div>
+          }
+        </mat-nav-list>
+
       </ng-scrollbar>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -117,22 +115,22 @@
               style="height: calc(100vh - 380px)"
               class="position-relative"
             >
-              @if(filteredContacts().length){
+              @if(filteredCollaborateur().length){
               <div class="position-relative">
                 <mat-nav-list class="p-x-8 contact-listing">
-                  @for(contact of filteredContacts(); track contact.id ){
+                  @for(contact of filteredCollaborateur(); track contact.uuid ){
 
                   <mat-list-item
                     (click)="selectContact(contact)"
                     class="gap-10 m-b-2"
                     [ngClass]="{
                       'bg-light-primary':
-                        contact.id === contactService.getSelectedContact()?.id
+                        contact.uuid === groupDisplayService.getSelectedCollaborateur()?.uuid
                     }"
                   >
                     <span matListItemIcon>
                       <img
-                        [src]="contact.image"
+                        [src]="contact.imagePath"
                         alt="Contact Image"
                         width="40px"
                         height="40px"
@@ -144,7 +142,7 @@
                       matListItemTitle
                     >
                       <h6 class="f-w-600 f-s-14 lh-sm">
-                        {{ contact.firstname }} {{ contact.lastname }}
+                        {{ contact.firstName }} {{ contact.lastName }}
                       </h6>
                       <div class="d-flex justify-content-center gap-8 m-l-auto">
                         <!-- star icon -->
@@ -152,14 +150,14 @@
                           class="d-flex align-items-center gap-8"
                           (click)="toggleStarred(contact, $event)"
                         >
-                          @if(contact.starred){
+                    <!--      @if(contact.starred){
                           <i-tabler
                             name="star"
                             class="icon-16 fill-warning"
                           ></i-tabler>
-                          }@else{
+                          }@else{-->
                           <i-tabler name="star" class="icon-16"></i-tabler>
-                          }
+                       <!--   }-->
                         </span>
                         <!-- Delete Icon -->
                         <i-tabler
@@ -170,7 +168,7 @@
                       </div>
                     </div>
                     <p class="f-s-12 m-0" matListItemLine>
-                      {{ contact.department }}
+                      {{ contact.email }}
                     </p>
                   </mat-list-item>
                   }
