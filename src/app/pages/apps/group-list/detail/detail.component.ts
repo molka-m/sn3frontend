@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ContactService } from 'src/app/services/apps/contact-list/contact-list.service';
 import { AppDeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ContactBox } from 'src/app/pages/apps/group-list/group-list';
+import { GroupBox } from 'src/app/pages/apps/group-list/group-list';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -47,7 +47,7 @@ export class AppContactListDetailComponent implements OnInit {
     });
   }
 
-  toggleStarred(contact: ContactBox, event: Event): void {
+  toggleStarred(contact: GroupBox, event: Event): void {
     this.contactService.toggleStarred(contact, event);
     this.contactService.updateContact(contact);
   }
@@ -73,7 +73,7 @@ export class AppContactListDetailComponent implements OnInit {
     this.formData.set(this.contact() ? { ...this.contact() } : null);
   }
 
-  deleteContact(contact: ContactBox): void {
+  deleteContact(contact: GroupBox): void {
     const dialogRef = this.dialog.open(AppDeleteDialogComponent, {
       width: '300px',
       data: {

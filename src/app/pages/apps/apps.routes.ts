@@ -17,7 +17,7 @@ import {AppInvoiceListComponent} from './invoice/invoice-list/invoice-list.compo
 import {AppAddInvoiceComponent} from './invoice/add-invoice/add-invoice.component';
 import {AppInvoiceViewComponent} from './invoice/invoice-view/invoice-view.component';
 import {AppEditInvoiceComponent} from './invoice/edit-invoice/edit-invoice.component';
-import {AppContactListComponent} from './contact-list/contact-list.component';
+import {AppGroupListComponent} from './group-list/group-list.component';
 import {AppCollaborateurComponent} from "./collaborateur/collaborateur.component";
 import {AppUserComponent} from "./employee/user.component";
 import {AppApplicationComponent} from "./application/application.component";
@@ -187,7 +187,7 @@ export const AppsRoutes: Routes = [
       },
       {
         path: 'group-list',
-        component: AppContactListComponent,
+        component: AppGroupListComponent,
         data: {
           title: 'Group Details',
           urls: [

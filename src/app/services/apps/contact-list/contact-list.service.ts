@@ -6,13 +6,13 @@ import {
   filter,
   label,
 } from 'src/app/pages/apps/group-list/listing/categories';
-import { ContactBox } from 'src/app/pages/apps/group-list/group-list';
+import { GroupBox } from 'src/app/pages/apps/group-list/group-list';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContactService {
-  contactList = signal<ContactBox[]>(ContactList);
+  contactList = signal<GroupBox[]>(ContactList);
   labels = signal<Category[]>(label);
   filters = signal<Category[]>(filter);
 
@@ -59,13 +59,13 @@ export class ContactService {
     this.selectedFilter.set(null);
   }
 
-  toggleStarred(contact: ContactBox, $event: any): void {
+  toggleStarred(contact: GroupBox, $event: any): void {
     contact.starred = !contact.starred;
     $event.stopPropagation();
     this.contactList.set([...this.contactList()]);
   }
 
-  deleteContact(contactToDelete: ContactBox) {
+  deleteContact(contactToDelete: GroupBox) {
     const updatedList = this.contactList().filter(
       (contact) => contact.id !== contactToDelete.id
     );

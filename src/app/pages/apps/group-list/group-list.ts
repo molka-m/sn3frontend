@@ -1,4 +1,4 @@
-export class ContactBox {
+export class GroupBox {
     constructor(
     public id: number | string,
     public firstname: string,

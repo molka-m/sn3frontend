@@ -1,9 +1,9 @@
-import { ContactBox } from './group-list';
+import { GroupBox } from './group-list';
 import { Chance } from 'chance';
 
 const chance = new Chance();
 
-export const ContactList: ContactBox[] = [
+export const ContactList: GroupBox[] = [
   {
     id: 1,
     firstname: 'Georgeanna',
@@ -458,7 +458,7 @@ export const ContactList: ContactBox[] = [
 ];
 export default ContactList;
 
-export function getUser(id: string): ContactBox | null {
+export function getUser(id: string): GroupBox | null {
   // tslint:disable-next-line: no-shadowed-variable
   const u = ContactList.find((u) => {
     return u.id === id;

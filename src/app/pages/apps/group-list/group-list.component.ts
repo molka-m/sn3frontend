@@ -4,8 +4,8 @@ import { MaterialModule } from 'src/app/material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
-  selector: 'app-contact-list',
+  selector: 'app-group-list',
   imports: [AppListingComponent, TablerIconsModule, MaterialModule],
-  templateUrl: './contact-list.component.html',
+  templateUrl: './group-list.component.html',
 })
 export class AppGroupListComponent {}

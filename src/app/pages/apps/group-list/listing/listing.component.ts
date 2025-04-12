@@ -11,7 +11,7 @@ import { Category, filter, label } from './categories';
 import { AppContactListDetailComponent } from '../detail/detail.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ContactFormDialogComponent } from '../contact-form-dialog/contact-form-dialog.component';
+import { GroupFormDialogComponent } from '../group-form-dialog/group-form-dialog.component';
 import { MaterialModule } from 'src/app/material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -19,7 +19,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ContactService } from 'src/app/services/apps/contact-list/contact-list.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { ContactBox } from 'src/app/pages/apps/contact-list/contact-list';
+import { GroupBox } from 'src/app/pages/apps/group-list/group-list';
 
 import { AppDeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { AppSearchDialogComponent } from 'src/app/layouts/full/vertical/header/header.component';
@@ -27,7 +27,7 @@ import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
-  selector: 'app-listing',
+  selector: 'app-group-listing',
   imports: [
     CommonModule,
     FormsModule,
@@ -68,7 +68,7 @@ export class AppListingComponent implements OnInit, OnDestroy {
   labels: Category[] = [];
   selectedFilter: Category | null = null;
   selectedCategory: Category | null = null;
-  selectedContact = signal<ContactBox | null>(null);
+  selectedContact = signal<GroupBox | null>(null);
   isActiveContact: boolean = false;
 
   mailnav = true;
@@ -159,7 +159,7 @@ export class AppListingComponent implements OnInit, OnDestroy {
     this.selectedContact.set(null);
     this.isActiveContact = false;
   }
-  selectContact(contact: ContactBox): void {
+  selectContact(contact: GroupBox): void {
     this.isActiveContact = true;
     this.selectedContact.set(contact);
     this.contactService.setSelectedContact(contact);
@@ -173,11 +173,11 @@ export class AppListingComponent implements OnInit, OnDestroy {
     this.contactService.applyCategory(category);
   }
 
-  toggleStarred(contact: ContactBox, $event: any): void {
+  toggleStarred(contact: GroupBox, $event: any): void {
     this.contactService.toggleStarred(contact, $event);
   }
 
-  deleteContact(contact: ContactBox): void {
+  deleteContact(contact: GroupBox): void {
     const dialogRef = this.dialog.open(AppDeleteDialogComponent, {
       width: '300px',
       autoFocus: false,
@@ -212,7 +212,7 @@ export class AppListingComponent implements OnInit, OnDestroy {
   }
 
   openAddContactDialog(): void {
-    const dialogRef = this.dialog.open(ContactFormDialogComponent, {
+    const dialogRef = this.dialog.open(GroupFormDialogComponent, {
       width: '400px',
       autoFocus: false,
     });
