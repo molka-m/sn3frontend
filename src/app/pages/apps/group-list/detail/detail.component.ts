@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ContactService } from 'src/app/services/apps/contact-list/contact-list.service';
 import { AppDeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ContactBox } from 'src/app/pages/apps/contact-list/contact-list';
+import { ContactBox } from 'src/app/pages/apps/group-list/group-list';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { MatSnackBar } from '@angular/material/snack-bar';

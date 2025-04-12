@@ -1,12 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ContactList } from 'src/app/pages/apps/contact-list/contactlistData';
+import { ContactList } from 'src/app/pages/apps/group-list/groupListData';
 import {
   Category,
   filter,
   label,
-} from 'src/app/pages/apps/contact-list/listing/categories';
-import { ContactBox } from 'src/app/pages/apps/contact-list/contact-list';
+} from 'src/app/pages/apps/group-list/listing/categories';
+import { ContactBox } from 'src/app/pages/apps/group-list/group-list';
 
 @Injectable({
   providedIn: 'root',

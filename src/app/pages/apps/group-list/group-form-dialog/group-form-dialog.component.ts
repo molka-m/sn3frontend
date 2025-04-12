@@ -7,11 +7,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
-  selector: 'app-contact-form-dialog',
-  templateUrl: './contact-form-dialog.component.html',
+  selector: 'app-group-form-dialog',
+  templateUrl: './group-form-dialog.component.html',
   imports: [MaterialModule, CommonModule, FormsModule, TablerIconsModule],
 })
-export class ContactFormDialogComponent {
+export class GroupFormDialogComponent {
   contact = {
     firstname: '',
     lastname: '',
@@ -33,7 +33,7 @@ export class ContactFormDialogComponent {
   imageUrl: string | ArrayBuffer | null = this.defaultImageUrl;
 
   constructor(
-    public dialogRef: MatDialogRef<ContactFormDialogComponent>,
+    public dialogRef: MatDialogRef<GroupFormDialogComponent>,
     private snackBar: MatSnackBar
   ) {}
 

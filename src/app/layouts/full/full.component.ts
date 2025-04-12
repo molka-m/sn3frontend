@@ -1,25 +1,29 @@
-import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
-import { CoreService } from 'src/app/services/core.service';
-import { AppSettings } from 'src/app/config';
-import { filter } from 'rxjs/operators';
-import { NavigationEnd, Router } from '@angular/router';
-import { navItems } from './vertical/sidebar/sidebar-data';
-import { NavService } from '../../services/nav.service';
-import { AppNavItemComponent } from './vertical/sidebar/nav-item/nav-item.component';
-import { RouterModule } from '@angular/router';
-import { MaterialModule } from 'src/app/material.module';
-import { CommonModule } from '@angular/common';
-import { SidebarComponent } from './vertical/sidebar/sidebar.component';
-import { NgScrollbarModule } from 'ngx-scrollbar';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { HeaderComponent } from './vertical/header/header.component';
-import { AppHorizontalHeaderComponent } from './horizontal/header/header.component';
-import { AppHorizontalSidebarComponent } from './horizontal/sidebar/sidebar.component';
-import { AppBreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
-import { CustomizerComponent } from './shared/customizer/customizer.component';
+import {BreakpointObserver, MediaMatcher} from '@angular/cdk/layout';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {MatSidenav, MatSidenavContent} from '@angular/material/sidenav';
+import {CoreService} from 'src/app/services/core.service';
+import {AppSettings} from 'src/app/config';
+import {filter} from 'rxjs/operators';
+import {NavigationEnd, Router, RouterModule} from '@angular/router';
+import {navItems} from './vertical/sidebar/sidebar-data';
+import {NavService} from '../../services/nav.service';
+import {AppNavItemComponent} from './vertical/sidebar/nav-item/nav-item.component';
+import {MaterialModule} from 'src/app/material.module';
+import {CommonModule} from '@angular/common';
+import {SidebarComponent} from './vertical/sidebar/sidebar.component';
+import {NgScrollbarModule} from 'ngx-scrollbar';
+import {TablerIconsModule} from 'angular-tabler-icons';
+import {HeaderComponent} from './vertical/header/header.component';
+import {AppHorizontalHeaderComponent} from './horizontal/header/header.component';
+import {AppHorizontalSidebarComponent} from './horizontal/sidebar/sidebar.component';
+import {AppBreadcrumbComponent} from './shared/breadcrumb/breadcrumb.component';
+import {CustomizerComponent} from './shared/customizer/customizer.component';
+import {User} from "../../services/models/user";
+import {UserService} from "../../services/apps/user/user.service";
+import console from "node:console";
+import {AuthService} from "../../services/apps/auth/auth.service";
+import {NavItem} from "./vertical/sidebar/nav-item/nav-item";
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -42,32 +46,34 @@ interface quicklinks {
 }
 
 @Component({
-    selector: 'app-full',
-    imports: [
-        RouterModule,
-        AppNavItemComponent,
-        MaterialModule,
-        CommonModule,
-        SidebarComponent,
-        NgScrollbarModule,
-        TablerIconsModule,
-        HeaderComponent,
-        AppHorizontalHeaderComponent,
-        AppHorizontalSidebarComponent,
-        AppBreadcrumbComponent,
-        CustomizerComponent,
-    ],
-    templateUrl: './full.component.html',
-    styleUrls: [],
-    encapsulation: ViewEncapsulation.None
+  selector: 'app-full',
+  imports: [
+    RouterModule,
+    AppNavItemComponent,
+    MaterialModule,
+    CommonModule,
+    SidebarComponent,
+    NgScrollbarModule,
+    TablerIconsModule,
+    HeaderComponent,
+    AppHorizontalHeaderComponent,
+    AppHorizontalSidebarComponent,
+    AppBreadcrumbComponent,
+    CustomizerComponent,
+  ],
+  templateUrl: './full.component.html',
+  styleUrls: [],
+  encapsulation: ViewEncapsulation.None
 })
 export class FullComponent implements OnInit {
   navItems = navItems;
+  user: User = {}
+
 
   @ViewChild('leftsidenav')
   public sidenav: MatSidenav;
   resView = false;
-  @ViewChild('content', { static: true }) content!: MatSidenavContent;
+  @ViewChild('content', {static: true}) content!: MatSidenavContent;
   //get options from service
   options = this.settings.getOptions();
   private layoutChangesSubscription = Subscription.EMPTY;
@@ -192,8 +198,11 @@ export class FullComponent implements OnInit {
     private mediaMatcher: MediaMatcher,
     private router: Router,
     private breakpointObserver: BreakpointObserver,
-    private navService: NavService
+    private navService: NavService,
+    private userService: UserService,
+    private authService: AuthService,
   ) {
+    this.setNavItemsByRole();
     this.htmlElement = document.querySelector('html')!;
     this.layoutChangesSubscription = this.breakpointObserver
       .observe([MOBILE_VIEW, TABLET_VIEW, MONITOR_VIEW, BELOWMONITOR])
@@ -215,11 +224,13 @@ export class FullComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
-        this.content.scrollTo({ top: 0 });
+        this.content.scrollTo({top: 0});
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadUser();
+  }
 
   ngOnDestroy() {
     this.layoutChangesSubscription.unsubscribe();
@@ -246,7 +257,7 @@ export class FullComponent implements OnInit {
   }
 
   receiveOptions(options: AppSettings): void {
-   // this.options = options;
+    // this.options = options;
     this.toggleDarkTheme(options);
     this.toggleColorsTheme(options);
   }
@@ -271,5 +282,44 @@ export class FullComponent implements OnInit {
 
     // Add the selected theme class
     this.htmlElement.classList.add(options.activeTheme);
+  }
+
+  private async loadUser() {
+    const userEmail = sessionStorage.getItem('userEmail');
+    if (userEmail) {
+      this.userService.getUserByEmail(userEmail).subscribe(
+        (user: User) => {
+          // Assign the returned user data to the `user` property
+          this.user = user;
+        },
+        (error) => {
+          console.error('Error loading user:', error);
+          // Handle the error, e.g., show an error message to the user
+        }
+      );
+    }
+  }
+
+  logout() {
+    this.authService.logout();
+    // Add any logout logic here if needed
+  }
+
+  setNavItemsByRole(): void {
+    const userRole = sessionStorage.getItem('userRole') ?? '';
+
+    const filterNavItemsByRole = (items: NavItem[], role: string): NavItem[] => {
+      return items
+        .filter(item => !item.roles || item.roles.includes(role))
+        .map(item => {
+          const newItem = {...item};
+          if (newItem.children) {
+            newItem.children = filterNavItemsByRole(newItem.children, role);
+          }
+          return newItem;
+        });
+    };
+
+    this.navItems = filterNavItemsByRole(this.navItems, userRole);
   }
 }

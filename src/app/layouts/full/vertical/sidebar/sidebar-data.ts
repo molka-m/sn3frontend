@@ -1,4 +1,4 @@
-import { NavItem } from './nav-item/nav-item';
+import {NavItem} from './nav-item/nav-item';
 
 export const navItems: NavItem[] = [
   {
@@ -8,12 +8,13 @@ export const navItems: NavItem[] = [
     displayName: 'Analytical',
     iconName: 'aperture',
     route: '/dashboards/dashboard1',
+    roles: ['ADMIN','RDP']
   },
-  {
-    displayName: 'eCommerce',
-    iconName: 'shopping-cart',
-    route: '/dashboards/dashboard2',
-  },
+  /*  {
+      displayName: 'eCommerce',
+      iconName: 'shopping-cart',
+      route: '/dashboards/dashboard2',
+    },*/
   {
     navCap: 'Apps',
   },
@@ -21,70 +22,91 @@ export const navItems: NavItem[] = [
     displayName: 'User',
     iconName: 'brand-ctemplar',
     route: 'apps/user',
+    roles: ['ADMIN']
+
   },
   {
     displayName: 'Application',
     iconName: 'brand-ctemplar',
     route: 'apps/application',
+    roles: ['ADMIN', 'RDP']
+
   },
   {
     displayName: 'Collaborateur',
     iconName: 'phone',
     route: 'apps/collaborateur',
+    roles: ['ADMIN', 'RDP']
+
   },
   {
     displayName: 'Group',
     iconName: 'phone',
     route: 'apps/group',
+    roles: ['ADMIN', 'RDP']
+
   },
-  {
-    displayName: 'Chat',
-    iconName: 'message-2',
-    route: 'apps/chat',
-  },
+  /*  {
+      displayName: 'Chat',
+      iconName: 'message-2',
+      route: 'apps/chat',
+    },*/
   {
     displayName: 'Calendar',
     iconName: 'calendar-event',
     route: 'apps/calendar',
+    roles: ['ADMIN', 'RDP']
+
   },
-  {
-    displayName: 'Email',
-    iconName: 'mail',
-    route: 'apps/email/inbox',
-  },
+  /*  {
+      displayName: 'Email',
+      iconName: 'mail',
+      route: 'apps/email/inbox',
+    },*/
   {
     displayName: 'Kanban',
     iconName: 'checklist',
     route: 'apps/kanban',
+    roles: ['ADMIN', 'RDP']
+
   },
 
   {
-    displayName: 'Contact List',
+    displayName: 'Group Details',
     iconName: 'phone',
-    route: 'apps/contact-list',
+    route: 'apps/group-list',
     chip: true,
     chipClass: 'bg-error text-white',
     chipContent: 'New',
+    roles: ['ADMIN', 'RDP']
+
   },
   {
     displayName: 'Courses',
     iconName: 'certificate',
     route: 'apps/courses',
+    roles: ['ADMIN', 'RDP']
+
   },
   {
     displayName: 'Notes',
     iconName: 'note',
     route: 'apps/notes',
+    roles: ['ADMIN', 'RDP']
+
   },
   {
     displayName: 'Tickets',
     iconName: 'ticket',
     route: 'apps/tickets',
+    roles: ['ADMIN', 'RDP']
+
   },
   {
     displayName: 'Invoice',
     iconName: 'file-invoice',
     route: '',
+    roles: ['ADMIN', 'RDP'],
     children: [
       {
         displayName: 'List',
@@ -112,11 +134,14 @@ export const navItems: NavItem[] = [
     displayName: 'ToDo',
     iconName: 'edit',
     route: 'apps/todo',
+    roles: ['ADMIN', 'RDP']
+
   },
   {
     displayName: 'Blog',
     iconName: 'chart-donut-3',
     route: 'apps/blog',
+    roles: ['ADMIN', 'RDP'],
     children: [
       {
         displayName: 'Post',
@@ -137,36 +162,43 @@ export const navItems: NavItem[] = [
     displayName: 'Roll Base Access',
     iconName: 'lock-access',
     route: 'apps/permission',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Treeview',
     iconName: 'git-merge',
     route: 'theme-pages/treeview',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Pricing',
     iconName: 'currency-dollar',
     route: 'theme-pages/pricing',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Account Setting',
     iconName: 'user-circle',
     route: 'theme-pages/account-setting',
+    roles: ['ADMIN']
   },
   {
     displayName: 'FAQ',
     iconName: 'help',
     route: 'theme-pages/faq',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Landingpage',
     iconName: 'app-window',
     route: 'landingpage',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Widgets',
     iconName: 'layout',
     route: 'widgets',
+    roles: ['ADMIN'],
     children: [
       {
         displayName: 'Cards',
@@ -192,6 +224,7 @@ export const navItems: NavItem[] = [
     displayName: 'Form elements',
     iconName: 'apps',
     route: 'forms/forms-elements',
+    roles: ['ADMIN', 'RDP'],
     children: [
       {
         displayName: 'Autocomplete',
@@ -224,21 +257,26 @@ export const navItems: NavItem[] = [
     displayName: 'Form Layouts',
     iconName: 'file-description',
     route: '/forms/form-layouts',
+    roles: ['ADMIN', 'RDP']
   },
   {
     displayName: 'Form Horizontal',
     iconName: 'box-align-bottom',
     route: '/forms/form-horizontal',
+    roles: ['ADMIN', 'RDP']
   },
   {
     displayName: 'Form Vertical',
     iconName: 'box-align-left',
     route: '/forms/form-vertical',
+    roles: ['ADMIN', 'RDP']
+
   },
   {
     displayName: 'Form Wizard',
     iconName: 'files',
     route: '/forms/form-wizard',
+    roles: ['ADMIN', 'RDP']
   },
   {
     displayName: 'Toastr',
@@ -247,6 +285,7 @@ export const navItems: NavItem[] = [
     chip: true,
     chipClass: 'bg-error text-white',
     chipContent: 'New',
+    roles: ['ADMIN', 'RDP']
   },
   {
     navCap: 'Tables',
@@ -255,6 +294,7 @@ export const navItems: NavItem[] = [
     displayName: 'Tables',
     iconName: 'layout',
     route: 'tables',
+    roles: ['ADMIN'],
     children: [
       {
         displayName: 'Basic Table',
@@ -332,6 +372,7 @@ export const navItems: NavItem[] = [
     displayName: 'Data table',
     iconName: 'border-outer',
     route: '/datatable/kichen-sink',
+    roles: ['ADMIN', 'RDP']
   },
   {
     navCap: 'Chart',
@@ -340,132 +381,139 @@ export const navItems: NavItem[] = [
     displayName: 'Line',
     iconName: 'chart-line',
     route: '/charts/line',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Gredient',
     iconName: 'chart-arcs',
     route: '/charts/gredient',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Area',
     iconName: 'chart-area',
     route: '/charts/area',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Candlestick',
     iconName: 'chart-candle',
     route: '/charts/candlestick',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Column',
     iconName: 'chart-dots',
     route: '/charts/column',
+    roles: ['ADMIN']
   },
   {
     displayName: 'Doughnut & Pie',
     iconName: 'chart-donut-3',
     route: '/charts/doughnut-pie',
+    roles: ['ADMIN'],
   },
   {
     displayName: 'Radialbar & Radar',
     iconName: 'chart-radar',
     route: '/charts/radial-radar',
+    roles: ['ADMIN'],
   },
-  {
-    navCap: 'UI',
-  },
-  {
-    displayName: 'Ui Components',
-    iconName: 'box',
-    route: 'ui-components',
-    children: [
-      {
-        displayName: 'Badge',
-        iconName: 'point',
-        route: 'ui-components/badge',
-      },
-      {
-        displayName: 'Expansion Panel',
-        iconName: 'point',
-        route: 'ui-components/expansion',
-      },
-      {
-        displayName: 'Chips',
-        iconName: 'point',
-        route: 'ui-components/chips',
-      },
-      {
-        displayName: 'Dialog',
-        iconName: 'point',
-        route: 'ui-components/dialog',
-      },
-      {
-        displayName: 'Lists',
-        iconName: 'point',
-        route: 'ui-components/lists',
-      },
-      {
-        displayName: 'Divider',
-        iconName: 'point',
-        route: 'ui-components/divider',
-      },
-      {
-        displayName: 'Menu',
-        iconName: 'point',
-        route: 'ui-components/menu',
-      },
-      {
-        displayName: 'Paginator',
-        iconName: 'point',
-        route: 'ui-components/paginator',
-      },
-      {
-        displayName: 'Progress Bar',
-        iconName: 'point',
-        route: 'ui-components/progress',
-      },
-      {
-        displayName: 'Progress Spinner',
-        iconName: 'point',
-        route: 'ui-components/progress-spinner',
-      },
-      {
-        displayName: 'Ripples',
-        iconName: 'point',
-        route: 'ui-components/ripples',
-      },
-      {
-        displayName: 'Slide Toggle',
-        iconName: 'point',
-        route: 'ui-components/slide-toggle',
-      },
-      {
-        displayName: 'Slider',
-        iconName: 'point',
-        route: 'ui-components/slider',
-      },
-      {
-        displayName: 'Snackbar',
-        iconName: 'point',
-        route: 'ui-components/snackbar',
-      },
-      {
-        displayName: 'Tabs',
-        iconName: 'point',
-        route: 'ui-components/tabs',
-      },
-      {
-        displayName: 'Toolbar',
-        iconName: 'point',
-        route: 'ui-components/toolbar',
-      },
-      {
-        displayName: 'Tooltips',
-        iconName: 'point',
-        route: 'ui-components/tooltips',
-      },
-    ],
-  },
+  /*  {
+      navCap: 'UI',
+    },
+    {
+      displayName: 'Ui Components',
+      iconName: 'box',
+      route: 'ui-components',
+      children: [
+        {
+          displayName: 'Badge',
+          iconName: 'point',
+          route: 'ui-components/badge',
+        },
+        {
+          displayName: 'Expansion Panel',
+          iconName: 'point',
+          route: 'ui-components/expansion',
+        },
+        {
+          displayName: 'Chips',
+          iconName: 'point',
+          route: 'ui-components/chips',
+        },
+        {
+          displayName: 'Dialog',
+          iconName: 'point',
+          route: 'ui-components/dialog',
+        },
+        {
+          displayName: 'Lists',
+          iconName: 'point',
+          route: 'ui-components/lists',
+        },
+        {
+          displayName: 'Divider',
+          iconName: 'point',
+          route: 'ui-components/divider',
+        },
+        {
+          displayName: 'Menu',
+          iconName: 'point',
+          route: 'ui-components/menu',
+        },
+        {
+          displayName: 'Paginator',
+          iconName: 'point',
+          route: 'ui-components/paginator',
+        },
+        {
+          displayName: 'Progress Bar',
+          iconName: 'point',
+          route: 'ui-components/progress',
+        },
+        {
+          displayName: 'Progress Spinner',
+          iconName: 'point',
+          route: 'ui-components/progress-spinner',
+        },
+        {
+          displayName: 'Ripples',
+          iconName: 'point',
+          route: 'ui-components/ripples',
+        },
+        {
+          displayName: 'Slide Toggle',
+          iconName: 'point',
+          route: 'ui-components/slide-toggle',
+        },
+        {
+          displayName: 'Slider',
+          iconName: 'point',
+          route: 'ui-components/slider',
+        },
+        {
+          displayName: 'Snackbar',
+          iconName: 'point',
+          route: 'ui-components/snackbar',
+        },
+        {
+          displayName: 'Tabs',
+          iconName: 'point',
+          route: 'ui-components/tabs',
+        },
+        {
+          displayName: 'Toolbar',
+          iconName: 'point',
+          route: 'ui-components/toolbar',
+        },
+        {
+          displayName: 'Tooltips',
+          iconName: 'point',
+          route: 'ui-components/tooltips',
+        },
+      ],
+    },*/
   {
     navCap: 'Auth',
   },
@@ -473,6 +521,7 @@ export const navItems: NavItem[] = [
     displayName: 'Login',
     iconName: 'login',
     route: '/authentication',
+    roles: ['ADMIN'],
     children: [
       {
         displayName: 'Login 1',
@@ -490,6 +539,7 @@ export const navItems: NavItem[] = [
     displayName: 'Register',
     iconName: 'user-plus',
     route: '/authentication',
+    roles: ['ADMIN'],
     children: [
       {
         displayName: 'Side Register',
@@ -507,6 +557,7 @@ export const navItems: NavItem[] = [
     displayName: 'Forgot Password',
     iconName: 'rotate',
     route: '/authentication',
+    roles: ['ADMIN'],
     children: [
       {
         displayName: 'Side Forgot Password',
@@ -524,6 +575,7 @@ export const navItems: NavItem[] = [
     displayName: 'Two Steps',
     iconName: 'zoom-code',
     route: '/authentication',
+    roles: ['ADMIN'],
     children: [
       {
         displayName: 'Side Two Steps',
@@ -541,72 +593,73 @@ export const navItems: NavItem[] = [
     displayName: 'Error',
     iconName: 'alert-circle',
     route: '/authentication/error',
+    roles: ['ADMIN'],
   },
   {
     displayName: 'Maintenance',
     iconName: 'settings',
     route: '/authentication/maintenance',
-  },
-  {
-    navCap: 'Other',
-  },
-  {
-    displayName: 'Menu Level',
-    iconName: 'box-multiple',
-    route: '/menu-level',
-    children: [
-      {
-        displayName: 'Menu 1',
-        iconName: 'point',
-        route: '/menu-1',
-        children: [
-          {
-            displayName: 'Menu 1',
-            iconName: 'point',
-            route: '/menu-1',
-          },
+  }
+  /*  {
+      navCap: 'Other',
+    },
+    {
+      displayName: 'Menu Level',
+      iconName: 'box-multiple',
+      route: '/menu-level',
+      children: [
+        {
+          displayName: 'Menu 1',
+          iconName: 'point',
+          route: '/menu-1',
+          children: [
+            {
+              displayName: 'Menu 1',
+              iconName: 'point',
+              route: '/menu-1',
+            },
 
-          {
-            displayName: 'Menu 2',
-            iconName: 'point',
-            route: '/menu-2',
-          },
-        ],
-      },
+            {
+              displayName: 'Menu 2',
+              iconName: 'point',
+              route: '/menu-2',
+            },
+          ],
+        },
 
-      {
-        displayName: 'Menu 2',
-        iconName: 'point',
-        route: '/menu-2',
-      },
-    ],
-  },
-  {
-    displayName: 'Disabled',
-    iconName: 'ban',
-    route: '/disabled',
-    disabled: true,
-  },
-  {
-    displayName: 'Chip',
-    iconName: 'mood-smile',
-    route: '/',
-    chip: true,
-    chipClass: 'bg-primary text-white',
-    chipContent: '9',
-  },
-  {
-    displayName: 'Outlined',
-    iconName: 'mood-smile',
-    route: '/',
-    chip: true,
-    chipClass: 'bg-error text-white',
-    chipContent: 'outlined',
-  },
-  {
-    displayName: 'External Link',
-    iconName: 'star',
-    route: 'https://www.google.com/',
-    external: true,
-  },
+        {
+          displayName: 'Menu 2',
+          iconName: 'point',
+          route: '/menu-2',
+        },
+      ],
+    },
+    {
+      displayName: 'Disabled',
+      iconName: 'ban',
+      route: '/disabled',
+      disabled: true,
+    },
+    {
+      displayName: 'Chip',
+      iconName: 'mood-smile',
+      route: '/',
+      chip: true,
+      chipClass: 'bg-primary text-white',
+      chipContent: '9',
+    },
+    {
+      displayName: 'Outlined',
+      iconName: 'mood-smile',
+      route: '/',
+      chip: true,
+      chipClass: 'bg-error text-white',
+      chipContent: 'outlined',
+    },
+    {
+      displayName: 'External Link',
+      iconName: 'star',
+      route: 'https://www.google.com/',
+      external: true,
+    },*/
 ];

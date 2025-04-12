@@ -186,13 +186,13 @@ export const AppsRoutes: Routes = [
         },
       },
       {
-        path: 'contact-list',
+        path: 'group-list',
         component: AppContactListComponent,
         data: {
-          title: 'Contact List',
+          title: 'Group Details',
           urls: [
             {title: 'Dashboard', url: '/dashboards/dashboard1'},
-            {title: 'Contact List'},
+            {title: 'Group Details'},
           ],
         },
       },

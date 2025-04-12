@@ -1,4 +1,4 @@
-import { ContactBox } from './contact-list';
+import { ContactBox } from './group-list';
 import { Chance } from 'chance';
 
 const chance = new Chance();

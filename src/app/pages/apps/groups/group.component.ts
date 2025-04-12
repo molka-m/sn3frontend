@@ -12,6 +12,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable} from "rxjs";
 import {Group} from "../../../services/models/group";
 import {GroupService} from "../../../services/apps/Group/group.service";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-user',
@@ -22,6 +23,7 @@ import {GroupService} from "../../../services/apps/Group/group.service";
     ReactiveFormsModule,
     TablerIconsModule,
     CommonModule,
+    RouterLink,
   ],
   standalone: true
 })
