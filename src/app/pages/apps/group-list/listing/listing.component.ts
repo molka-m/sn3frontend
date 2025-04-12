@@ -17,6 +17,7 @@ import {Group} from '../../../../services/models/group';
 import {GroupService} from '../../../../services/apps/Group/group.service';
 import {UserService} from "../../../../services/apps/user/user.service";
 import {User} from "../../../../services/models/user";
+import {of} from "rxjs";
 
 @Component({
     selector: 'app-group-listing',
@@ -79,17 +80,15 @@ export class AppListingComponent implements OnInit, OnDestroy {
         });
     }
 
-    filteredCollaborateur = computed(() => {
-        let filtered = this.groupDisplayService.collaborateurList();
-        this.selectedGroup = this.groupDisplayService.selectedLabel();
-        console.log(this.selectedGroup);
-        if (this.selectedGroup !== null) {
-            this.userService.findByGroupUUID(this.selectedGroup?.uuid).subscribe(value => {
-                filtered = value;
-            });
-        }
-        return filtered;
-    });
+  filteredCollaborateur = computed(() => {
+    const selectedGroup = this.groupDisplayService.selectedLabel();
+    if (selectedGroup !== null) {
+      return this.userService.findByGroupUUID(selectedGroup.uuid); // returns Observable<User[]>
+    }
+    return of([]); // safe fallback as Observable<User[]>
+  });
+
+
 
     ngOnInit() {
         this.labels = this.groupDisplayService.labels();

@@ -115,11 +115,10 @@
               style="height: calc(100vh - 380px)"
               class="position-relative"
             >
-              @if(filteredCollaborateur().length){
+              @if(filteredCollaborateur().subscribe.length){
               <div class="position-relative">
                 <mat-nav-list class="p-x-8 contact-listing">
-                  @for(contact of filteredCollaborateur(); track contact.uuid ){
-
+                  @for(contact of filteredCollaborateur() | async; track contact.uuid){
                   <mat-list-item
                     (click)="selectContact(contact)"
                     class="gap-10 m-b-2"
