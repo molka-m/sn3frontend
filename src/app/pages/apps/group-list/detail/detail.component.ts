@@ -11,6 +11,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgScrollbarModule} from 'ngx-scrollbar';
 import {User} from "../../../../services/models/user";
 import {GroupService} from "../../../../services/apps/Group/group.service";
+import {switchMap} from "rxjs/operators";
+import {BehaviorSubject, of} from "rxjs";
+import {UserService} from "../../../../services/apps/user/user.service";
 
 @Component({
   selector: 'app-detail',
@@ -29,11 +32,13 @@ export class AppContactListDetailComponent implements OnInit {
   collaborateur = signal<User | null>(null);
   formData = signal<any | null>(null);
   selectedCollaborateur = computed(() => this.groupDisplayService.getSelectedCollaborateur());
+  private refresh$ = new BehaviorSubject<void>(undefined);
 
   constructor(
     public dialog: MatDialog,
     private groupDisplayService: GroupDisplayService,
     private groupService: GroupService,
+    private userService: UserService,
     private snackBar: MatSnackBar
   ) {
   }
@@ -92,8 +97,22 @@ export class AppContactListDetailComponent implements OnInit {
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
           this.groupDisplayService.deleteCollaboraeur(collaborateur);
+          this.refresh$.next();
+
         }
       });
     }
+
   }
+
+  filteredCollaborateur = computed(() => {
+    const selectedGroup = this.groupDisplayService.selectedLabel();
+    if (selectedGroup !== null) {
+      return this.refresh$.pipe(
+        switchMap(() => this.userService.findByGroupUUID(selectedGroup.uuid))
+      );
+    }
+    return of([]);
+  });
+
 }

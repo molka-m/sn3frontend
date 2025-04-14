@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, computed} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {MaterialModule} from 'src/app/material.module';
 import {FormsModule} from '@angular/forms';
@@ -10,6 +10,8 @@ import {UserService} from "../../../../services/apps/user/user.service";
 import {GroupService} from "../../../../services/apps/Group/group.service";
 import {Group} from "../../../../services/models/group";
 import {GroupDisplayService} from "../../../../services/apps/group-list/group-display.service";
+import {BehaviorSubject, of} from "rxjs";
+import {switchMap} from "rxjs/operators";
 
 @Component({
   selector: 'app-group-form-dialog',
@@ -17,22 +19,8 @@ import {GroupDisplayService} from "../../../../services/apps/group-list/group-di
   imports: [MaterialModule, CommonModule, FormsModule, TablerIconsModule],
 })
 export class GroupFormDialogComponent {
-  contact = {
-    firstname: '',
-    lastname: '',
-    image: '',
-    company: '',
-    phone: '',
-    email: '',
-    address: '',
-    notes: '',
-    department: '',
-  };
-  departments = [
-    {id: 1, name: 'Support'},
-    {id: 2, name: 'Engineering'},
-    {id: 3, name: 'Sales'},
-  ];
+
+  private refresh$ = new BehaviorSubject<void>(undefined);
   users: User[];
   selectedUser: User;
   listUuid: string[] = [];
@@ -52,19 +40,36 @@ export class GroupFormDialogComponent {
     this.loadAllGroups();
   }
 
-  assingUserToGroup(): void {
+  assignUserToGroup(): void {
     if (this.selectedUser.uuid != null) {
-      this.listUuid.push(this.selectedUser.uuid)
+      this.listUuid.push(this.selectedUser.uuid);
     }
-    this.groupService.affectMultiUserToGroup(this.selectedGroup.groupName, this.listUuid).subscribe(() => {
-      // Only close the dialog and show the snackbar after deletion succeeds
-      this.listUuid = [];
 
-    })
-    this.dialogRef.close();
-    this.openSnackBar('user assigned successfully!', 'Close');
-    this.groupDisplayService.applyLabel(this.selectedGroup)
+    this.groupService
+      .affectMultiUserToGroup(this.selectedGroup.groupName, this.listUuid)
+      .subscribe(() => {
+        this.listUuid = [];
+
+        this.dialogRef.close();
+        this.openSnackBar('User assigned successfully!', 'Close');
+
+        this.groupDisplayService.applyLabel(this.selectedGroup);
+
+        // Trigger refresh!
+        this.refresh$.next();
+      });
   }
+
+  filteredCollaborateur = computed(() => {
+    const selectedGroup = this.groupDisplayService.selectedLabel();
+    if (selectedGroup !== null) {
+      return this.refresh$.pipe(
+        switchMap(() => this.userService.findByGroupUUID(selectedGroup.uuid))
+      );
+    }
+    return of([]);
+  });
+
 
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {

@@ -18,6 +18,7 @@ import {GroupService} from '../../../../services/apps/Group/group.service';
 import {UserService} from "../../../../services/apps/user/user.service";
 import {User} from "../../../../services/models/user";
 import {of} from "rxjs";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-group-listing',
@@ -43,6 +44,7 @@ export class AppListingComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private groupService: GroupService,
     private userService: UserService,
+    private router: ActivatedRoute
   ) {
     const changeDetectorRef = inject(ChangeDetectorRef);
     const media = inject(MediaMatcher);
@@ -93,13 +95,11 @@ export class AppListingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.labels = this.groupDisplayService.labels();
-    this.selectedLabel = this.groupDisplayService.selectedLabel();
-
     this.groupDisplayService.collaborateurList.set(
       this.groupDisplayService.collaborateurList()
     );
     this.loadAllGroups();
-    this.groupDisplayService.setLabelsFromApi(this.labels);
+    this.groupDisplayService.setLabelsFromApi(this.labels,this.router.snapshot.paramMap.get('uuid'));
   }
 
 
@@ -114,7 +114,7 @@ export class AppListingComponent implements OnInit, OnDestroy {
     this.groupDisplayService.setSelectedCollaborateur(contact);
   }
 
-  applyLabel(group: Group): void {
+  applyLabel(group: Group | undefined): void {
     this.groupDisplayService.applyLabel(group);
   }
 
@@ -176,7 +176,7 @@ export class AppListingComponent implements OnInit, OnDestroy {
       (response: Group[]) => {
         this.labels = response;
         this.groupDisplayService.labels.set(response);
-        this.applyLabel(response[0]);
+        this.applyLabel(response.find(group => group.uuid === this.router.snapshot.paramMap.get('uuid')));
       },
       (error: any) => {
         console.error('Error fetching Groups:', error);

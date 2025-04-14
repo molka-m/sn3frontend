@@ -17,7 +17,7 @@ export class GroupDisplayService {
   private selectedCollaborateurSubject = new BehaviorSubject<User | null>(null);
   selectedContact$ = this.selectedCollaborateurSubject.asObservable();
 
-  constructor(private groupService: GroupService,private userService: UserService) {
+  constructor(private groupService: GroupService, private userService: UserService) {
   }
 
   setSelectedCollaborateur(collaborateur: User | null) {
@@ -58,7 +58,6 @@ export class GroupDisplayService {
         const updatedList = this.collaborateurList().filter(
           (collab) => collab.uuid !== collaborateurToDelete.uuid
         );
-        console.log(this.collaborateurList()+"hahahah");
         console.log(updatedList);
         this.collaborateurList.set(updatedList);
 
@@ -80,8 +79,10 @@ export class GroupDisplayService {
   }
 
   // Label selection
-  applyLabel(group: Group): void {
-    this.selectedLabel.set(group);
+  applyLabel(group: Group | undefined): void {
+    if(group){
+      this.selectedLabel.set(group);
+    }
 
     this.labels.set(
       this.labels().map((g) => ({
@@ -105,12 +106,16 @@ export class GroupDisplayService {
   }
 
   // Set labels dynamically from API
-  setLabelsFromApi(groups: Group[]): void {
+  setLabelsFromApi(groups: Group[], uuidSelectedGroup: string | null): void {
     const updated = groups.map((g, index) => ({
       ...g,
       active: index === 0,
     }));
     this.labels.set(updated);
-    this.selectedLabel.set(updated[0]);
+    console.log(uuidSelectedGroup);
+    console.log(groups.find(group => group.uuid === uuidSelectedGroup));
+    const selectedGroup = groups.find(group => group.uuid === uuidSelectedGroup) || updated[0];
+    this.selectedLabel.set(selectedGroup);
   }
+
 }

@@ -1,6 +1,10 @@
 import { Injectable, signal } from '@angular/core';
 import { TicketElement } from 'src/app/pages/apps/tickets/ticket';
 import { tickets } from 'src/app/pages/apps/tickets/ticketsData';
+import {Observable} from "rxjs";
+import {Group} from "../../models/group";
+import {Task} from "../../models/tasks";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +12,7 @@ import { tickets } from 'src/app/pages/apps/tickets/ticketsData';
 export class TicketService {
   //  track ticket data
   private ticketsData = signal<TicketElement[]>(tickets);
+  private backendUrl = 'http://localhost:8081/api/v1/task';
 
   get tickets$() {
     return this.ticketsData();
@@ -25,7 +30,7 @@ export class TicketService {
     return this.users;
   }
 
-  constructor() {}
+  constructor(private http: HttpClient) { }
 
   addTicket(ticket: TicketElement): void {
     const today = new Date();
@@ -66,4 +71,28 @@ export class TicketService {
       currentTickets.filter((ticket) => ticket.id !== id)
     );
   }
+
+
+  // coming from backend
+  findAllTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.backendUrl}/all`);
+  }
+
+
+  addTask(newTask: Task): Observable<Task> {
+    return this.http.post<Task>(`${this.backendUrl}/add`, newTask);
+  }
+
+  deleteTask(uuid: string): Observable<any> {
+    return this.http.delete<any>(`${this.backendUrl}/delete/` + uuid);
+  }
+
+  affectTaskToUser(uuidTask: string | undefined, uuidUser: string | undefined): Observable<any> {
+    return this.http.post<any>(`${this.backendUrl}/assing/` + uuidTask + `/` + uuidUser, null);
+  }
+
+  removeTaskFromUser(uuidTask: string | undefined, uuidUser: string | undefined): Observable<any> {
+    return this.http.post<any>(`${this.backendUrl}/removeuser/` + uuidTask + `/` + uuidUser, null);
+  }
+
 }

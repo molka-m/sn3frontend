@@ -186,7 +186,7 @@ export const AppsRoutes: Routes = [
         },
       },
       {
-        path: 'group-list',
+        path: 'group-list/:uuid',
         component: AppGroupListComponent,
         data: {
           title: 'Group Details',

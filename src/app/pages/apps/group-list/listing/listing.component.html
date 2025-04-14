@@ -118,18 +118,18 @@
               @if(filteredCollaborateur().subscribe.length){
               <div class="position-relative">
                 <mat-nav-list class="p-x-8 contact-listing">
-                  @for(contact of filteredCollaborateur() | async; track contact.uuid){
+                  @for(collab of filteredCollaborateur() | async; track collab.uuid){
                   <mat-list-item
-                    (click)="selectContact(contact)"
+                    (click)="selectContact(collab)"
                     class="gap-10 m-b-2"
                     [ngClass]="{
                       'bg-light-primary':
-                        contact.uuid === groupDisplayService.getSelectedCollaborateur()?.uuid
+                        collab.uuid === groupDisplayService.getSelectedCollaborateur()?.uuid
                     }"
                   >
                     <span matListItemIcon>
                       <img
-                        [src]="contact.imagePath"
+                        [src]="collab.imagePath"
                         alt="Contact Image"
                         width="40px"
                         height="40px"
@@ -141,13 +141,13 @@
                       matListItemTitle
                     >
                       <h6 class="f-w-600 f-s-14 lh-sm">
-                        {{ contact.firstName }} {{ contact.lastName }}
+                        {{ collab.firstName }} {{ collab.lastName }}
                       </h6>
                       <div class="d-flex justify-content-center gap-8 m-l-auto">
                         <!-- star icon -->
                         <span
                           class="d-flex align-items-center gap-8"
-                          (click)="toggleStarred(contact, $event)"
+                          (click)="toggleStarred(collab, $event)"
                         >
                     <!--      @if(contact.starred){
                           <i-tabler
@@ -162,12 +162,12 @@
                         <i-tabler
                           name="trash"
                           class="icon-16 cursor-pointer"
-                          (click)="deleteContact(contact)"
+                          (click)="deleteContact(collab)"
                         ></i-tabler>
                       </div>
                     </div>
                     <p class="f-s-12 m-0" matListItemLine>
-                      {{ contact.email }}
+                      {{ collab.email }}
                     </p>
                   </mat-list-item>
                   }

@@ -71,16 +71,16 @@ export const navItems: NavItem[] = [
 
   },
 
-  {
-    displayName: 'Group Details',
-    iconName: 'phone',
-    route: 'apps/group-list',
-    chip: true,
-    chipClass: 'bg-error text-white',
-    chipContent: 'New',
-    roles: ['ADMIN', 'RDP']
+  /*  {
+      displayName: 'Group Details',
+      iconName: 'phone',
+      route: 'apps/group-list',
+      chip: true,
+      chipClass: 'bg-error text-white',
+      chipContent: 'New',
+      roles: ['ADMIN', 'RDP']
 
-  },
+    },*/
   {
     displayName: 'Courses',
     iconName: 'certificate',
