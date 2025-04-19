@@ -11,12 +11,8 @@ import {HttpClient} from "@angular/common/http";
 })
 export class TaskService {
   //  track ticket data
-  private ticketsData = signal<TicketElement[]>(tickets);
   private backendUrl = 'http://localhost:8081/api/v1/task';
 
-  get tickets$() {
-    return this.ticketsData();
-  }
 
   public users = [
     { id: 1, name: 'Alice', photo: '/assets/images/profile/user-1.jpg' },
@@ -30,9 +26,11 @@ export class TaskService {
     return this.users;
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
-  addTicket(ticket: TicketElement): void {
+
+/*  addTicket(ticket: TicketElement): void {
     const today = new Date();
 
     // Get the current list of tickets
@@ -56,21 +54,21 @@ export class TaskService {
 
     // Update the tickets data with the new ticket
     this.ticketsData.update((currentTickets) => [...currentTickets, newTicket]);
-  }
+  }*/
 
-  updateTicket(updatedTicket: TicketElement): void {
+/*  updateTicket(updatedTicket: TicketElement): void {
     this.ticketsData.update((currentTickets) =>
       currentTickets.map((ticket) =>
         ticket.id === updatedTicket.id ? updatedTicket : ticket
       )
     );
-  }
+  }*/
 
-  deleteTicket(id: number): void {
+/*  deleteTicket(id: number): void {
     this.ticketsData.update((currentTickets) =>
       currentTickets.filter((ticket) => ticket.id !== id)
     );
-  }
+  }*/
 
 
   // coming from backend

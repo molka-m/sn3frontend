@@ -1,0 +1,12 @@
+@use "../variables" as *;
+.priority-bar {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+
+.bg-light-danger {
+  background-color: #f8d7da; /* Light red background */
+  color: #721c24; /* Dark red text */
+}

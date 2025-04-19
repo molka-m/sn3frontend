@@ -42,29 +42,34 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
   Open = 0;
 
   displayedColumns: string[] = [
-    'id',
     'title',
     'assignee',
     'status',
-    'date',
+    'createdBy',
+    'createdAt',
+    'priority',
     'action',
   ];
 
-  dataSource = new MatTableDataSource<TicketElement>([]);
+  dataSource = new MatTableDataSource<Task>([]);
 
-  constructor(private ticketService: TaskService, public dialog: MatDialog) {}
+  constructor(private taskService: TaskService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.loadTickets(); // Load the initial tickets
+    this.loadAllTickets(); // Load the initial tickets
   }
 
-  private loadTickets(): void {
-    const tickets = this.ticketService.tickets$; // Get tickets from the service
-    this.dataSource.data = tickets; // Set the dataSource to the tickets
+  onImageError(event: Event) {
+    const target = event.target as HTMLImageElement;
+    target.src = 'assets/images/profile/no-user.jpg';
+  }
 
-    // Update counts based on the current tickets
+
+  loadAllTickets(): void {
+    this.taskService.findAllTasks().subscribe((tasks) => this.dataSource.data= tasks);
     this.updateCounts();
   }
+
 
   private updateCounts(): void {
     this.totalCount = this.dataSource.data.length;
@@ -97,15 +102,16 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.loadTickets();
+      this.loadAllTickets();
     });
   }
 
   countTicketsByStatus(status: string): number {
     return this.dataSource.data.filter(
-      (ticket) => ticket.status.toLowerCase() === status.toLowerCase()
+      (task) => (task.status ?? '').toLowerCase() === status.toLowerCase()
     ).length;
   }
+
 }
 
 @Component({
@@ -139,6 +145,8 @@ export class TaskDialogComponent {
     this.task = { ...data.task };
     console.log(this.data);
   }
+
+
 
   ngOnInit(): void {
     this.users = this.taskService.getUsers(); // Get users from the service
