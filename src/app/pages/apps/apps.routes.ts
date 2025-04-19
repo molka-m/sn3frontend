@@ -12,7 +12,6 @@ import {AppTodoComponent} from './todo/todo.component';
 import {AppPermissionComponent} from './permission/permission.component';
 import {AppKanbanComponent} from './kanban/kanban.component';
 import {AppFullcalendarComponent} from './fullcalendar/fullcalendar.component';
-import {AppTicketlistComponent} from './tickets/tickets.component';
 import {AppInvoiceListComponent} from './invoice/invoice-list/invoice-list.component';
 import {AppAddInvoiceComponent} from './invoice/add-invoice/add-invoice.component';
 import {AppInvoiceViewComponent} from './invoice/invoice-view/invoice-view.component';
@@ -22,6 +21,7 @@ import {AppCollaborateurComponent} from "./collaborateur/collaborateur.component
 import {AppUserComponent} from "./employee/user.component";
 import {AppApplicationComponent} from "./application/application.component";
 import {AppGroupComponent} from "./groups/group.component";
+import {AppTasklistComponent} from "./tasks/tasks.component";
 
 
 export const AppsRoutes: Routes = [
@@ -164,13 +164,13 @@ export const AppsRoutes: Routes = [
         },
       },
       {
-        path: 'tickets',
-        component: AppTicketlistComponent,
+        path: 'tasks',
+        component: AppTasklistComponent,
         data: {
-          title: 'Tickets',
+          title: 'Tasks',
           urls: [
             {title: 'Dashboard', url: '/dashboards/dashboard1'},
-            {title: 'Tickets'},
+            {title: 'Tasks'},
           ],
         },
       },

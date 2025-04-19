@@ -16,16 +16,22 @@ import { MaterialModule } from 'src/app/material.module';
 import { CommonModule } from '@angular/common';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TicketService } from 'src/app/services/apps/ticket/ticket.service';
-import { TicketElement } from 'src/app/pages/apps/tickets/ticket';
+import { TaskService } from 'src/app/services/apps/ticket/task.service';
+import { TicketElement } from 'src/app/pages/apps/tasks/ticket';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {provideNativeDateAdapter} from "@angular/material/core";
+import {Task} from "../../../services/models/tasks";
+import {Application} from "../../../services/models/application";
+import {AppAddApplicationComponent} from "../application/add/add.component";
+import {Observable} from "rxjs";
+import {TasksService} from "../tasksssss/tasks-service.service";
 
 @Component({
-  selector: 'app-ticket-list',
-  templateUrl: './tickets.component.html',
+  selector: 'app-task-list',
+  templateUrl: './tasks.component.html',
   imports: [MaterialModule, CommonModule, TablerIconsModule],
 })
-export class AppTicketlistComponent implements OnInit, AfterViewInit {
+export class AppTasklistComponent implements OnInit, AfterViewInit {
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -46,7 +52,7 @@ export class AppTicketlistComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource<TicketElement>([]);
 
-  constructor(private ticketService: TicketService, public dialog: MatDialog) {}
+  constructor(private ticketService: TaskService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadTickets(); // Load the initial tickets
@@ -84,9 +90,9 @@ export class AppTicketlistComponent implements OnInit, AfterViewInit {
     return this.dataSource.filteredData.length;
   }
 
-  openDialog(action: string, ticket: TicketElement | any): void {
-    const dialogRef = this.dialog.open(TicketDialogComponent, {
-      data: { action, ticket },
+  openDialog(action: string, task: Task | any): void {
+    const dialogRef = this.dialog.open(TaskDialogComponent, {
+      data: { action, task },
       autoFocus: false,
     });
 
@@ -105,7 +111,7 @@ export class AppTicketlistComponent implements OnInit, AfterViewInit {
 @Component({
   // tslint:disable-next-line - Disables all
   selector: 'app-dialog-content',
-  templateUrl: 'ticket-dialog-content.html',
+  templateUrl: 'task-dialog-content.html',
   imports: [
     MaterialModule,
     CommonModule,
@@ -113,30 +119,33 @@ export class AppTicketlistComponent implements OnInit, AfterViewInit {
     FormsModule,
     ReactiveFormsModule,
     TablerIconsModule,
+
   ],
 })
-export class TicketDialogComponent {
+export class TaskDialogComponent {
   action: string;
-  local_data: TicketElement;
+  task: Task;
   users: any[] = [];
   dateControl = new FormControl();
 
   constructor(
-    public dialogRef: MatDialogRef<TicketDialogComponent>,
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<TaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private ticketService: TicketService,
+    private taskService: TaskService,
     private snackBar: MatSnackBar
   ) {
     this.action = data.action;
-    this.local_data = { ...data.ticket };
+    this.task = { ...data.task };
+    console.log(this.data);
   }
 
   ngOnInit(): void {
-    this.users = this.ticketService.getUsers(); // Get users from the service
+    this.users = this.taskService.getUsers(); // Get users from the service
 
-    if (this.local_data.date) {
+    if (this.task.echeance) {
       this.dateControl.setValue(
-        new Date(this.local_data.date).toISOString().split('T')[0]
+        new Date(this.task.echeance).toISOString().split('T')[0]
       ); //  existing date
     } else {
       // Set to today's date if no existing date is available
@@ -145,19 +154,47 @@ export class TicketDialogComponent {
   }
 
   doAction(): void {
-    this.local_data.date = this.dateControl.value; // Update local_data with the new date
+    this.task.echeance = this.dateControl.value; // Update local_data with the new date
 
     if (this.action === 'Update') {
-      this.ticketService.updateTicket(this.local_data);
+     // this.ticketService.updateTicket(this.local_data);
       this.openSnackBar('Ticket updated successfully!', 'Close');
     } else if (this.action === 'Add') {
-      this.ticketService.addTicket(this.local_data);
-      this.openSnackBar('Ticket added successfully!', 'Close');
+      this.createNewTask();
+      // this.ticketService.addTicket(this.local_data);
+     // this.openSnackBar('Ticket added successfully!', 'Close');
     } else if (this.action === 'Delete') {
-      this.ticketService.deleteTicket(this.local_data.id);
+   //   this.ticketService.deleteTicket(this.local_data.id);
       this.openSnackBar('Ticket deleted successfully!', 'Close');
     }
     this.dialogRef.close();
+  }
+
+  private createNewTask() {
+    const email = sessionStorage.getItem('userEmail') ?? undefined;
+    this.task.emailCreatedBy = email;
+    this.saveTask(this.task).subscribe(
+      (createdTask: Task) => {
+        console.log("Task created successfully:", createdTask);
+        // Close the dialog only after user creation
+        this.dialogRef.close();
+        // Open success dialog
+        const successDialogRef = this.dialog.open(AppAddApplicationComponent);
+        successDialogRef.afterClosed().subscribe(() => {
+          this.dialogRef.close({event: 'Refresh'});
+          this.openSnackBar('Task Added successfully!', 'Close');
+        });
+      },
+      (error: any) => {
+        console.error("Error creating Task:", error);
+        this.openSnackBar('Failed to add task!', 'Close');
+      }
+    );
+  }
+
+  saveTask(task: Task): Observable<Task> {
+    console.log(task);
+    return this.taskService.addTask(task);
   }
 
   openSnackBar(message: string, action: string): void {

@@ -11,4 +11,5 @@ export interface Task {
   echeance?: number;
   createdAt?: Date;
   lastModifiedAt?: Date;
+  emailCreatedBy?: string;
 }

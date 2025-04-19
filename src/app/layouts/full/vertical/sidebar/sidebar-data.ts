@@ -96,9 +96,9 @@ export const navItems: NavItem[] = [
 
   },
   {
-    displayName: 'Tickets',
+    displayName: 'Tasks',
     iconName: 'ticket',
-    route: 'apps/tickets',
+    route: 'apps/tasks',
     roles: ['ADMIN', 'RDP']
 
   },

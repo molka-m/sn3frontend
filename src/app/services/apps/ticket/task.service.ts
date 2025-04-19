@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { TicketElement } from 'src/app/pages/apps/tickets/ticket';
-import { tickets } from 'src/app/pages/apps/tickets/ticketsData';
+import { TicketElement } from 'src/app/pages/apps/tasks/ticket';
+import { tickets } from 'src/app/pages/apps/tasks/ticketsData';
 import {Observable} from "rxjs";
 import {Group} from "../../models/group";
 import {Task} from "../../models/tasks";
@@ -9,7 +9,7 @@ import {HttpClient} from "@angular/common/http";
 @Injectable({
   providedIn: 'root',
 })
-export class TicketService {
+export class TaskService {
   //  track ticket data
   private ticketsData = signal<TicketElement[]>(tickets);
   private backendUrl = 'http://localhost:8081/api/v1/task';
