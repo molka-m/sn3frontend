@@ -1,30 +1,16 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  AfterViewInit,
-  Inject,
-} from '@angular/core';
-import { MatTableDataSource, MatTable } from '@angular/material/table';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MaterialModule } from 'src/app/material.module';
-import { CommonModule } from '@angular/common';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TaskService } from 'src/app/services/apps/ticket/task.service';
-import { TicketElement } from 'src/app/pages/apps/tasks/ticket';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import {provideNativeDateAdapter} from "@angular/material/core";
+import {AfterViewInit, Component, Inject, OnInit, ViewChild,} from '@angular/core';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef,} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MaterialModule} from 'src/app/material.module';
+import {CommonModule} from '@angular/common';
+import {TablerIconsModule} from 'angular-tabler-icons';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {TaskService} from 'src/app/services/apps/ticket/task.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {Task} from "../../../services/models/tasks";
-import {Application} from "../../../services/models/application";
 import {AppAddApplicationComponent} from "../application/add/add.component";
 import {Observable} from "rxjs";
-import {TasksService} from "../tasksssss/tasks-service.service";
 import {RouterLink} from "@angular/router";
 import {User} from "../../../services/models/user";
 import {UserService} from "../../../services/apps/user/user.service";
@@ -35,8 +21,8 @@ import {UserService} from "../../../services/apps/user/user.service";
   imports: [MaterialModule, CommonModule, TablerIconsModule, RouterLink],
 })
 export class AppTasklistComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatTable, { static: true }) table: MatTable<any>;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatTable, {static: true}) table: MatTable<any>;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   searchText: string = '';
   totalCount = 0;
@@ -56,7 +42,8 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource<Task>([]);
 
-  constructor(private taskService: TaskService, public dialog: MatDialog) {}
+  constructor(private taskService: TaskService, public dialog: MatDialog) {
+  }
 
   ngOnInit(): void {
     this.loadAllTickets(); // Load the initial tickets
@@ -69,7 +56,7 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
 
 
   loadAllTickets(): void {
-    this.taskService.findAllTasks().subscribe((tasks) => this.dataSource.data= tasks);
+    this.taskService.findAllTasks().subscribe((tasks) => this.dataSource.data = tasks);
     this.updateCounts();
   }
 
@@ -89,6 +76,7 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
     const input = event.target as HTMLInputElement;
     this.applyFilter(input.value);
   }
+
   applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -100,14 +88,12 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
 
   openDialog(action: string, task: Task | any): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      data: { action, task },
+      data: {action, task},
       autoFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.event === 'Assign' || result?.event === 'Refresh') {
-        this.loadAllTickets();
-      }
+      this.loadAllTickets();
     });
   }
 
@@ -149,10 +135,9 @@ export class TaskDialogComponent {
     private userService: UserService
   ) {
     this.action = data.action;
-    this.task = { ...data.task };
+    this.task = {...data.task};
     console.log(this.data);
   }
-
 
 
   ngOnInit(): void {
@@ -170,7 +155,7 @@ export class TaskDialogComponent {
   loadAllUsers(): void {
     this.userService.findAllNonAdminUsers().subscribe(
       (response: User[]) => {
-        this.users =response; // Set the whole user list
+        this.users = response; // Set the whole user list
       },
       (error) => {
         console.error("Error fetching users:", error);
@@ -184,7 +169,7 @@ export class TaskDialogComponent {
     if (this.action === 'Assign') {
       this.taskService.affectTaskToUser(this.task?.uuid, this.task?.porteur?.uuid).subscribe(
         () => {
-          this.dialogRef.close({ event: 'Assign' }); // Sends event back to parent
+          this.dialogRef.close({event: 'Assign'}); // Sends event back to parent
           this.openSnackBar('User assigned successfully!', 'Close');
         },
         (error) => {
@@ -192,16 +177,15 @@ export class TaskDialogComponent {
           this.openSnackBar('Failed to assign User!', 'Close');
         }
       );
-    }
-    else if (this.action === 'Update') {
-     // this.ticketService.updateTicket(this.local_data);
+    } else if (this.action === 'Update') {
+      // this.ticketService.updateTicket(this.local_data);
       this.openSnackBar('Ticket updated successfully!', 'Close');
     } else if (this.action === 'Add') {
       this.createNewTask();
       // this.ticketService.addTicket(this.local_data);
-     // this.openSnackBar('Ticket added successfully!', 'Close');
+      // this.openSnackBar('Ticket added successfully!', 'Close');
     } else if (this.action === 'Delete') {
-   //   this.ticketService.deleteTicket(this.local_data.id);
+      //   this.ticketService.deleteTicket(this.local_data.id);
       this.openSnackBar('Ticket deleted successfully!', 'Close');
     }
     this.dialogRef.close();
@@ -242,6 +226,7 @@ export class TaskDialogComponent {
       verticalPosition: 'top',
     });
   }
+
   closeDialog(): void {
     this.dialogRef.close();
   }

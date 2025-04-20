@@ -1,70 +1,67 @@
 <mat-card class="cardWithShadow">
   <mat-card-content>
-    @if(invoiceDetail()){
+    @if(taskDetail()){
     <span>
       <div class="row m-b-24">
         <div class="col-sm-4 d-flex align-items-center">
           <h4 class="f-s-14 f-s-18 f-w-600">
-            #{{ invoiceDetail()?.id }}
+            #{{ taskDetail()?.taskName }}
           </h4>
         </div>
-        <div class="col-sm-8 text-right">
-          <a routerLink="/apps/invoice" mat-stroked-button class="m-r-10">Back to Invoice</a>
-
-          <a [routerLink]="['/apps/editinvoice/', invoiceDetail()?.id]" mat-flat-button>Edit Invoice</a>
-        </div>
       </div>
       <mat-divider></mat-divider>
       <div class="row p-y-24">
         <div class="col-sm-6">
-          <span class="f-w-600 f-s-15"> Order Status: </span>
+          <span class="f-w-600 f-s-15"> Task Status: </span>
           <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.status }}
+            {{ taskDetail()?.status }}
           </h6>
         </div>
         <div class="col-sm-6 text-right">
-          <span class="f-w-600 f-s-15"> Order Date: </span>
+          <span class="f-w-600 f-s-15"> Creation Date: </span>
           <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.orderDate | date : "fullDate" }}
+            {{ taskDetail()?.createdAt | date : "fullDate" }}
           </h6>
         </div>
       </div>
       <mat-divider></mat-divider>
       <div class="row p-y-24">
         <div class="col-sm-6">
-          <span class="f-w-600 f-s-15"> Bill From: </span>
+          <span class="f-w-600 f-s-15"> Created By: </span>
           <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.billFrom }}
+            {{ taskDetail()?.createdBy?.firstName  }} {{ taskDetail()?.createdBy?.lastName  }}
           </h6>
           <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.billFromEmail }}
+            {{ taskDetail()?.createdBy?.email }}
           </h6>
           <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.billFromAddress }}
+            {{ taskDetail()?.createdBy?.phone }}
           </h6>
-          <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.billFromPhone }}
+         <span class="f-w-600 f-s-15"> Application : </span>
+            <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
+              Application Name Goes here
           </h6>
         </div>
         <div class="col-sm-6 text-right">
-          <span class="f-w-600 f-s-15"> Bill To: </span>
+          <span class="f-w-600 f-s-15"> Proteur : </span>
           <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.billTo }}
+            {{ taskDetail()?.createdBy?.firstName  }} {{ taskDetail()?.createdBy?.lastName  }}
           </h6>
           <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.billToEmail }}
+            {{ taskDetail()?.createdBy?.email }}
           </h6>
           <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.billToAddress }}
+            {{ taskDetail()?.createdBy?.phone }}
           </h6>
-          <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
-            {{ invoiceDetail()?.billToPhone }}
+           <span class="f-w-600 f-s-15"> Group : </span>
+            <h6 class="m-t-5 m-b-0 f-w-500 f-s-14">
+              Group Name Goes here
           </h6>
         </div>
       </div>
 
-      <div class="b-1 table-responsive">
-        <table mat-table [dataSource]="invoiceDetail()?.orders || []" class="no-wrap v-middle">
+    <!--  <div class="b-1 table-responsive">
+        <table mat-table [dataSource]="taskDetail()?.orders || []" class="no-wrap v-middle">
           <ng-container matColumnDef="itemName">
             <th mat-header-cell *matHeaderCellDef class="f-s-15 f-w-600">
               Item Name
@@ -100,15 +97,14 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
-      </div>
+      </div>-->
 
       <div class="text-right m-t-30">
         <h5 class="m-b-5 f-w-600 f-s-16">
-          Sub total: {{ invoiceDetail()?.totalCost }}
+          last Modification : {{ taskDetail()?.createdAt }}
         </h5>
-        <span class="f-w-600 f-s-16">Vat: 10%</span>
         <h3 class="m-b-0 b-t-1 p-t-20 f-s-18 m-t-24">
-          Grand Total: {{ invoiceDetail()?.grandTotal }}
+          Deadline : {{ taskDetail()?.lastModifiedAt }}
         </h3>
       </div>
     </span>

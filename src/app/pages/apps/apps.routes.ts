@@ -14,7 +14,7 @@ import {AppKanbanComponent} from './kanban/kanban.component';
 import {AppFullcalendarComponent} from './fullcalendar/fullcalendar.component';
 import {AppInvoiceListComponent} from './invoice/invoice-list/invoice-list.component';
 import {AppAddInvoiceComponent} from './invoice/add-invoice/add-invoice.component';
-import {AppInvoiceViewComponent} from './invoice/invoice-view/invoice-view.component';
+import {AppInvoiceViewComponent} from './tasks/task-view/invoice-view.component';
 import {AppEditInvoiceComponent} from './invoice/edit-invoice/edit-invoice.component';
 import {AppGroupListComponent} from './group-list/group-list.component';
 import {AppCollaborateurComponent} from "./collaborateur/collaborateur.component";
@@ -253,13 +253,13 @@ export const AppsRoutes: Routes = [
         },
       },
       {
-        path: 'viewInvoice/:id',
+        path: 'taskDetails/:uuid',
         component: AppInvoiceViewComponent,
         data: {
-          title: 'View Invoice',
+          title: 'Task Details',
           urls: [
-            {title: 'Dashboard', url: '/dashboards/dashboard1'},
-            {title: 'View Invoice'},
+            {title: 'Tasks', url: '/apps/tasks'},
+            {title: 'Task Details'},
           ],
         },
       },

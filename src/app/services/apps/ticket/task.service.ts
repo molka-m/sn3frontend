@@ -76,6 +76,9 @@ export class TaskService {
     return this.http.get<Task[]>(`${this.backendUrl}/all`);
   }
 
+  findTaskByUuid(uuid: string | undefined): Observable<Task> {
+    return this.http.get<Task>(`${this.backendUrl}/`+uuid);
+  }
 
   addTask(newTask: Task): Observable<Task> {
     return this.http.post<Task>(`${this.backendUrl}/add`, newTask);

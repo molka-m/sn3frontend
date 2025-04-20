@@ -81,13 +81,13 @@ export const navItems: NavItem[] = [
       roles: ['ADMIN', 'RDP']
 
     },*/
-  {
+/*  {
     displayName: 'Courses',
     iconName: 'certificate',
     route: 'apps/courses',
     roles: ['ADMIN', 'RDP']
 
-  },
+  },*/
   {
     displayName: 'Notes',
     iconName: 'note',
@@ -102,7 +102,7 @@ export const navItems: NavItem[] = [
     roles: ['ADMIN', 'RDP']
 
   },
-  {
+  /*{
     displayName: 'Invoice',
     iconName: 'file-invoice',
     route: '',
@@ -129,7 +129,7 @@ export const navItems: NavItem[] = [
         route: '/apps/editinvoice/101',
       },
     ],
-  },
+  },*/
   {
     displayName: 'ToDo',
     iconName: 'edit',
@@ -155,7 +155,7 @@ export const navItems: NavItem[] = [
       },
     ],
   },
-  {
+ /* {
     navCap: 'Pages',
   },
   {
@@ -419,7 +419,7 @@ export const navItems: NavItem[] = [
     route: '/charts/radial-radar',
     roles: ['ADMIN'],
   },
-  /*  {
+  /!*  {
       navCap: 'UI',
     },
     {
@@ -513,7 +513,7 @@ export const navItems: NavItem[] = [
           route: 'ui-components/tooltips',
         },
       ],
-    },*/
+    },*!/
   {
     navCap: 'Auth',
   },
@@ -599,7 +599,7 @@ export const navItems: NavItem[] = [
     displayName: 'Maintenance',
     iconName: 'settings',
     route: '/authentication/maintenance',
-  }
+  }*/
   /*  {
       navCap: 'Other',
     },
