@@ -1,33 +1,30 @@
-import { Component } from '@angular/core';
-import {
-  CdkDragDrop,
-  DragDropModule,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { MatDialog } from '@angular/material/dialog';
-import { AppKanbanDialogComponent } from './kanban-dialog.component';
-import { AppOkDialogComponent } from './ok-dialog/ok-dialog.component';
-import { AppDeleteDialogComponent } from './delete-dialog/delete-dialog.component';
-import { MaterialModule } from 'src/app/material.module';
-import { CommonModule } from '@angular/common';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { KanbanService } from 'src/app/services/apps/kanban/kanban.service';
-import { Todos } from './kanban';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { NgScrollbarModule } from 'ngx-scrollbar';
+import {Component} from '@angular/core';
+import {CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem,} from '@angular/cdk/drag-drop';
+import {MatDialog} from '@angular/material/dialog';
+import {AppKanbanDialogComponent} from './kanban-dialog.component';
+import {AppOkDialogComponent} from './ok-dialog/ok-dialog.component';
+import {AppDeleteDialogComponent} from './delete-dialog/delete-dialog.component';
+import {MaterialModule} from 'src/app/material.module';
+import {CommonModule} from '@angular/common';
+import {TablerIconsModule} from 'angular-tabler-icons';
+import {KanbanService} from 'src/app/services/apps/kanban/kanban.service';
+import {Todos} from './kanban';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {NgScrollbarModule} from 'ngx-scrollbar';
+import {TaskService} from "../../../services/apps/ticket/task.service";
+
 // tslint:disable-next-line - Disables all
 
 @Component({
-    selector: 'app-kanban',
-    templateUrl: './kanban.component.html',
-    imports: [
-        MaterialModule,
-        CommonModule,
-        TablerIconsModule,
-        DragDropModule,
-        NgScrollbarModule,
-    ]
+  selector: 'app-kanban',
+  templateUrl: './kanban.component.html',
+  imports: [
+    MaterialModule,
+    CommonModule,
+    TablerIconsModule,
+    DragDropModule,
+    NgScrollbarModule,
+  ]
 })
 export class AppKanbanComponent {
   todos: Todos[] = [];
@@ -37,14 +34,21 @@ export class AppKanbanComponent {
 
   constructor(
     public dialog: MatDialog,
-    public taskService: KanbanService,
-    private snackBar: MatSnackBar
+    public kanbanService: KanbanService,
+    private snackBar: MatSnackBar,
+    private taskService: TaskService,
   ) {
     this.loadTasks();
   }
 
+
+/*  loadAllTickets(): void {
+    this.taskService.findAllTasks().subscribe((tasks) => this.allTask = tasks);
+  }*/
+
+
   loadTasks(): void {
-    const allTasks = this.taskService.getAllTasks();
+    const allTasks = this.kanbanService.getAllTasks();
 
     this.todos = allTasks.todos;
     this.inprogress = allTasks.inProgress;
@@ -74,18 +78,18 @@ export class AppKanbanComponent {
 
     const dialogRef = this.dialog.open(AppKanbanDialogComponent, {
       data: obj,
-      autoFocus: false, 
+      autoFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result.event === 'Add') {
-        this.taskService.addTask(result.data);
+        this.kanbanService.addTask(result.data);
         this.loadTasks();
         this.dialog.open(AppOkDialogComponent);
         this.showSnackbar('Task added successfully!');
       }
       if (result.event === 'Edit') {
-        this.taskService.editTask(result.data);
+        this.kanbanService.editTask(result.data);
         this.loadTasks();
       }
     });
@@ -96,7 +100,7 @@ export class AppKanbanComponent {
 
     del.afterClosed().subscribe((result) => {
       if (result === 'true') {
-        this.taskService.deleteTask(t.id);
+        this.kanbanService.deleteTask(t.id);
         this.loadTasks();
         this.showSnackbar('Task deleted successfully!');
       }
@@ -110,20 +114,21 @@ export class AppKanbanComponent {
       verticalPosition: 'top',
     });
   }
+
   //taskProperty bgcolor
   getTaskClass(taskProperty: string | any): any {
     return taskProperty === 'Design'
       ? 'bg-success'
       : taskProperty === 'Mobile'
-      ? 'bg-primary'
-      : taskProperty === 'UX Stage'
-      ? 'bg-warning'
-      : taskProperty === 'Research'
-      ? 'bg-error'
-      : taskProperty === 'Data Science'
-      ? 'bg-secondary'
-      : taskProperty === 'Branding'
-      ? 'bg-primary'
-      : '';
+        ? 'bg-primary'
+        : taskProperty === 'UX Stage'
+          ? 'bg-warning'
+          : taskProperty === 'Research'
+            ? 'bg-error'
+            : taskProperty === 'Data Science'
+              ? 'bg-secondary'
+              : taskProperty === 'Branding'
+                ? 'bg-primary'
+                : '';
   }
 }

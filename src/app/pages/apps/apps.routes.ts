@@ -14,7 +14,7 @@ import {AppKanbanComponent} from './kanban/kanban.component';
 import {AppFullcalendarComponent} from './fullcalendar/fullcalendar.component';
 import {AppInvoiceListComponent} from './invoice/invoice-list/invoice-list.component';
 import {AppAddInvoiceComponent} from './invoice/add-invoice/add-invoice.component';
-import {AppInvoiceViewComponent} from './tasks/task-view/invoice-view.component';
+import {AppInvoiceViewComponent} from './tasks/task-view/task-view.component';
 import {AppEditInvoiceComponent} from './invoice/edit-invoice/edit-invoice.component';
 import {AppGroupListComponent} from './group-list/group-list.component';
 import {AppCollaborateurComponent} from "./collaborateur/collaborateur.component";
