@@ -25,11 +25,14 @@ import {Application} from "../../../services/models/application";
 import {AppAddApplicationComponent} from "../application/add/add.component";
 import {Observable} from "rxjs";
 import {TasksService} from "../tasksssss/tasks-service.service";
+import {RouterLink} from "@angular/router";
+import {User} from "../../../services/models/user";
+import {UserService} from "../../../services/apps/user/user.service";
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './tasks.component.html',
-  imports: [MaterialModule, CommonModule, TablerIconsModule],
+  imports: [MaterialModule, CommonModule, TablerIconsModule, RouterLink],
 })
 export class AppTasklistComponent implements OnInit, AfterViewInit {
   @ViewChild(MatTable, { static: true }) table: MatTable<any>;
@@ -101,10 +104,13 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
       autoFocus: false,
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.loadAllTickets();
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.event === 'Assign' || result?.event === 'Refresh') {
+        this.loadAllTickets();
+      }
     });
   }
+
 
   countTicketsByStatus(status: string): number {
     return this.dataSource.data.filter(
@@ -131,7 +137,7 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
 export class TaskDialogComponent {
   action: string;
   task: Task;
-  users: any[] = [];
+  users: User[] = [];
   dateControl = new FormControl();
 
   constructor(
@@ -139,7 +145,8 @@ export class TaskDialogComponent {
     public dialogRef: MatDialogRef<TaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private taskService: TaskService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userService: UserService
   ) {
     this.action = data.action;
     this.task = { ...data.task };
@@ -149,8 +156,7 @@ export class TaskDialogComponent {
 
 
   ngOnInit(): void {
-    this.users = this.taskService.getUsers(); // Get users from the service
-
+    this.loadAllUsers();
     if (this.task.echeance) {
       this.dateControl.setValue(
         new Date(this.task.echeance).toISOString().split('T')[0]
@@ -161,10 +167,33 @@ export class TaskDialogComponent {
     }
   }
 
+  loadAllUsers(): void {
+    this.userService.findAllNonAdminUsers().subscribe(
+      (response: User[]) => {
+        this.users =response; // Set the whole user list
+      },
+      (error) => {
+        console.error("Error fetching users:", error);
+      }
+    );
+  }
+
   doAction(): void {
     this.task.echeance = this.dateControl.value; // Update local_data with the new date
 
-    if (this.action === 'Update') {
+    if (this.action === 'Assign') {
+      this.taskService.affectTaskToUser(this.task?.uuid, this.task?.porteur?.uuid).subscribe(
+        () => {
+          this.dialogRef.close({ event: 'Assign' }); // Sends event back to parent
+          this.openSnackBar('User assigned successfully!', 'Close');
+        },
+        (error) => {
+          console.error('Error during assigning User:', error);
+          this.openSnackBar('Failed to assign User!', 'Close');
+        }
+      );
+    }
+    else if (this.action === 'Update') {
      // this.ticketService.updateTicket(this.local_data);
       this.openSnackBar('Ticket updated successfully!', 'Close');
     } else if (this.action === 'Add') {
@@ -177,6 +206,7 @@ export class TaskDialogComponent {
     }
     this.dialogRef.close();
   }
+
 
   private createNewTask() {
     const email = sessionStorage.getItem('userEmail') ?? undefined;
@@ -217,6 +247,6 @@ export class TaskDialogComponent {
   }
 
   trackByUser(index: number, user: any): number {
-    return user.id;
+    return user.uuid;
   }
 }

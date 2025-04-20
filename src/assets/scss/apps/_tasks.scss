@@ -10,3 +10,10 @@
   background-color: #f8d7da; /* Light red background */
   color: #721c24; /* Dark red text */
 }
+
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px; /* Adjust as needed */
+}

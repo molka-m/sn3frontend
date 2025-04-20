@@ -86,9 +86,11 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <h6 class="f-s-16 f-w-500 m-b-4">{{ element.taskName }}</h6>
-            <span class="f-s-14 f-w-400 max-text d-block">{{
-                element.taskDescription
-              }}</span>
+            <span
+              class="f-s-14 f-w-400 max-text d-block truncate-text"
+              [attr.title]="element.taskDescription">
+              {{ element.taskDescription }}
+            </span>
           </td>
         </ng-container>
 
@@ -182,6 +184,12 @@
             Action
           </th>
           <td mat-cell *matCellDef="let element" class="action-link">
+            <a
+              [routerLink]="['/apps/group-list', element.uuid]"
+              class="m-r-10 cursor-pointer"
+            >
+              <i-tabler name="eye" class="icon-18"></i-tabler>
+            </a>
             <a
               *ngIf="!element.porteur"
               (click)="openDialog('Assign', element)"
