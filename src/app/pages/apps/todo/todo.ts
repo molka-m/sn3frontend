@@ -1,7 +1,8 @@
 export class ToDo {
-  id = 0;
+  uuid ='';
   public message = '';
   public completionStatus = false;
   public edit = false;
   public date: Date | null = null;
+  public userEmail = '';
 }

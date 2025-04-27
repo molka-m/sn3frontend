@@ -44,7 +44,6 @@ export class AppTodoComponent implements OnInit {
     public todoService: TodoService,
     private dialog: MatDialog
   ) {
-    this.todos.set(this.todoService.getTodos());
   }
 
   isOver(): boolean {
@@ -55,26 +54,45 @@ export class AppTodoComponent implements OnInit {
     this.showSidebar.set(!this.showSidebar);
   }
 
+
+
+  public loadTodosForUser(): void {
+    this.todoService.findToDosByUser().subscribe({
+      next: (todosFromBackend) => {
+        this.todos.set(todosFromBackend);
+        this.calculateTotals(todosFromBackend);  // Calculate totals after loading todos
+      },
+      error: (error) => {
+        console.error('Failed to load todos', error);
+        // If there is an error, initialize the totals to 0
+        this.calculateTotals([]);
+      }
+    });
+  }
+
+  private calculateTotals(todos: ToDo[]): void {
+    this.totalTodos.set(todos.length);
+    this.totalCompleted.set(todos.filter((todo) => todo.completionStatus).length);
+    this.totalIncomplete.set(todos.filter((todo) => !todo.completionStatus).length);
+    console.log(todos)
+  }
+
   ngOnInit(): void {
+    this.loadTodosForUser();
+    // Initialize the form group
     this.inputFg = this.fb.group({
       mess: [],
     });
-    const allTodos = this.todoService.getTodos();
-    this.todos.set(allTodos);
-    this.totalTodos.set(allTodos.length);
-    this.totalCompleted.set(
-      allTodos.filter((todo) => todo.completionStatus).length
-    );
-    this.totalIncomplete.set(
-      allTodos.filter((todo) => !todo.completionStatus).length
-    );
   }
+
 
   selectionlblClick(val: string): void {
     this.selectedCategory.set(val); // Update the selected category
 
     // Filter todos based on the selected category
     const filteredTodos = this.todoService.getTodos().filter((todo) => {
+
+      console.log(todo)
       if (val === 'all') return true;
       if (val === 'complete') return todo.completionStatus;
       if (val === 'uncomplete') return !todo.completionStatus;
@@ -121,6 +139,14 @@ export class AppTodoComponent implements OnInit {
     // Toggle the completion status directly
     todo.completionStatus = !todo.completionStatus;
     // Update the counts
+    this.todoService.update(todo).subscribe({
+      next: () => {
+        this.loadTodosForUser();
+      },
+      error: (error) => {
+        console.error('Failed to add todo', error);
+      }
+    });
     this.updateCounts();
   }
   private updateCounts(): void {
@@ -136,7 +162,7 @@ export class AppTodoComponent implements OnInit {
 
   editTodo(todo: ToDo): void {
     if (todo.edit) {
-      this.todoService.editTodo(todo.id, todo.message);
+      this.todoService.editTodo(todo.uuid, todo.message);
       todo.edit = false;
       this.openSnackBar('Todo successfully edited!', 'Close');
       this.updateCounts();
@@ -145,12 +171,12 @@ export class AppTodoComponent implements OnInit {
     }
   }
 
-  deleteTodo(id: number): void {
+  deleteTodo(uuid: string): void {
     const dialogRef = this.dialog.open(AppDeleteDialogComponent);
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.todoService.deleteTodo(id);
+        this.todoService.deleteTodo(uuid);
         this.todos.set(this.todoService.getTodos());
         this.updateCounts();
         this.openSnackBar('Todo successfully deleted!', 'Close');

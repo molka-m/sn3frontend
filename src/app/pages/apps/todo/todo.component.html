@@ -126,7 +126,7 @@
           </div>
           <mat-divider></mat-divider>
           <mat-card-content>
-            @for(todo of todos(); track todo.message; let i = $index) {
+            @for(todo of todos(); track todo.uuid;) {
             <div class="todo-item p-y-12 p-x-8 b-b-1">
               <div class="d-flex align-items-center w-100">
                 <div class="flex-shrink-0">
@@ -164,7 +164,7 @@
                         mat-icon-button
                         class="d-flex justify-content-center"
                         href="javascript: void(0);"
-                        (click)="deleteTodo(todo.id)"
+                        (click)="deleteTodo(todo.uuid)"
                       >
                         <i-tabler
                           name="trash"
@@ -198,7 +198,7 @@
                         mat-icon-button
                         class="d-flex justify-content-center"
                         href="javascript: void(0);"
-                        (click)="deleteTodo(i)"
+                        (click)="deleteTodo(todo.uuid)"
                       >
                         <i-tabler
                           name="trash"
