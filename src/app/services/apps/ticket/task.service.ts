@@ -40,8 +40,9 @@ export class TaskService {
     completed: Task[];
     onHold: Task[];
   }> {
-    return this.findAllTasks().pipe(
+    return this.findAllTasksByUser().pipe(
       map((tasks: Task[]) => {
+        console.log(tasks);
         const todos = tasks.filter(task => task.status === 'TODO');
         const inProgress = tasks.filter(task => task.status === 'En_Cours');
         const completed = tasks.filter(task => task.status === 'Termine');
@@ -116,6 +117,15 @@ export class TaskService {
   findAllTasks(): Observable<Task[]> {
     return this.http.get<Task[]>(`${this.backendUrl}/all`);
   }
+
+
+  findAllTasksByUser(): Observable<Task[]> {
+    const userEmail = sessionStorage.getItem('userEmail');
+    console.log(userEmail);
+    return this.http.get<Task[]>(`${this.backendUrl}/all/`+userEmail);
+  }
+
+
 
   findTaskByUuid(uuid: string | undefined): Observable<Task> {
     return this.http.get<Task>(`${this.backendUrl}/` + uuid);

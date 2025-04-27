@@ -36,7 +36,7 @@ export const navItems: NavItem[] = [
     displayName: 'Collaborateur',
     iconName: 'phone',
     route: 'apps/collaborateur',
-    roles: ['ADMIN', 'RDP']
+    roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
   {
@@ -67,7 +67,7 @@ export const navItems: NavItem[] = [
     displayName: 'Kanban',
     iconName: 'checklist',
     route: 'apps/kanban',
-    roles: ['ADMIN', 'RDP']
+    roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
 
@@ -92,7 +92,7 @@ export const navItems: NavItem[] = [
     displayName: 'Notes',
     iconName: 'note',
     route: 'apps/notes',
-    roles: ['ADMIN', 'RDP']
+    roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
   {
@@ -134,14 +134,14 @@ export const navItems: NavItem[] = [
     displayName: 'ToDo',
     iconName: 'edit',
     route: 'apps/todo',
-    roles: ['ADMIN', 'RDP']
+    roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
   {
     displayName: 'Blog',
     iconName: 'chart-donut-3',
     route: 'apps/blog',
-    roles: ['ADMIN', 'RDP'],
+    roles: ['ADMIN', 'RDP','INGENIEUR'],
     children: [
       {
         displayName: 'Post',
