@@ -14,7 +14,6 @@ import {TaskService} from "../../../../services/apps/ticket/task.service";
   imports: [
     MaterialModule,
     CommonModule,
-    RouterLink,
     FormsModule,
     ReactiveFormsModule,
     TablerIconsModule,

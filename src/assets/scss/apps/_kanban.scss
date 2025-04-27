@@ -33,3 +33,12 @@
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+.bg-dark-red {
+  background-color: #b91c1c;  /* Dark red color */
+}
+
+.bg-danger {
+  background-color: #dc3545;  /* Bootstrap's standard red */
+  color: white;               /* Ensures text is white on red background */
+}

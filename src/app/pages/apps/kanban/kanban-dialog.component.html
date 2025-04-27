@@ -56,31 +56,6 @@
         </mat-form-field>
       </div>
 
-      @if(local_data.imageUrl || action=='Add'){
-      <div class="col-12">
-        <mat-label class="f-w-600 m-b-8 d-block">Image URL</mat-label>
-        <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            id="imageUrl"
-            name="imageUrl"
-            [(ngModel)]="local_data.imageUrl"
-            placeholder="Image URL"
-          />
-        </mat-form-field>
-        <div class="row">
-          <div class="col-12">
-            <img
-              [src]="local_data.imageUrl"
-              alt="Task Image"
-              style="max-width: 100%"
-              class="rounded m-t-10"
-            />
-          </div>
-        </div>
-      </div>
-      }
     </div>
   </form>
 </mat-dialog-content>

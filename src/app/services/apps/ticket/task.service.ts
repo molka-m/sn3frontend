@@ -1,10 +1,8 @@
-import { Injectable, signal } from '@angular/core';
-import { TicketElement } from 'src/app/pages/apps/tasks/ticket';
-import { tickets } from 'src/app/pages/apps/tasks/ticketsData';
+import {Injectable, signal} from '@angular/core';
 import {Observable} from "rxjs";
-import {Group} from "../../models/group";
 import {Task} from "../../models/tasks";
 import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +13,11 @@ export class TaskService {
 
 
   public users = [
-    { id: 1, name: 'Alice', photo: '/assets/images/profile/user-1.jpg' },
-    { id: 2, name: 'Jonathan', photo: '/assets/images/profile/user-2.jpg' },
-    { id: 3, name: 'Smith', photo: '/assets/images/profile/user-3.jpg' },
-    { id: 4, name: 'Vincent', photo: '/assets/images/profile/user-4.jpg' },
-    { id: 5, name: 'Chris', photo: '/assets/images/profile/user-5.jpg' },
+    {id: 1, name: 'Alice', photo: '/assets/images/profile/user-1.jpg'},
+    {id: 2, name: 'Jonathan', photo: '/assets/images/profile/user-2.jpg'},
+    {id: 3, name: 'Smith', photo: '/assets/images/profile/user-3.jpg'},
+    {id: 4, name: 'Vincent', photo: '/assets/images/profile/user-4.jpg'},
+    {id: 5, name: 'Chris', photo: '/assets/images/profile/user-5.jpg'},
   ];
 
   getUsers(): any[] {
@@ -30,46 +28,89 @@ export class TaskService {
   }
 
 
-/*  addTicket(ticket: TicketElement): void {
-    const today = new Date();
+  todos = signal<Task[]>([]);
+  inProgress = signal<Task[]>([]);
+  completed = signal<Task[]>([]);
+  onHold = signal<Task[]>([]);
 
-    // Get the current list of tickets
-    const currentTickets = this.ticketsData();
 
-    // Find the highest ID currently in use
-    const maxId =
-      currentTickets.length > 0
-        ? Math.max(...currentTickets.map((t) => t.id))
-        : 0; // Default to 0 if no tickets exist
+  getAllTasks(): Observable<{
+    todos: Task[];
+    inProgress: Task[];
+    completed: Task[];
+    onHold: Task[];
+  }> {
+    return this.findAllTasks().pipe(
+      map((tasks: Task[]) => {
+        const todos = tasks.filter(task => task.status === 'TODO');
+        const inProgress = tasks.filter(task => task.status === 'En_Cours');
+        const completed = tasks.filter(task => task.status === 'Termine');
+        const onHold = tasks.filter(task => task.status === 'En_Attente');
 
-    const newTicket: TicketElement = {
-      id: maxId + 1, // Set new ID
-      title: ticket.title,
-      subtext: ticket.subtext,
-      assignee: ticket.assignee,
-      imgSrc: '/assets/images/profile/user-1.jpg',
-      status: 'open',
-      date: today.toISOString().split('T')[0],
-    };
+        // Set the signals
+        this.todos.set(todos);
+        this.inProgress.set(inProgress);
+        this.completed.set(completed);
+        this.onHold.set(onHold);
 
-    // Update the tickets data with the new ticket
-    this.ticketsData.update((currentTickets) => [...currentTickets, newTicket]);
-  }*/
-
-/*  updateTicket(updatedTicket: TicketElement): void {
-    this.ticketsData.update((currentTickets) =>
-      currentTickets.map((ticket) =>
-        ticket.id === updatedTicket.id ? updatedTicket : ticket
-      )
+        // Return the grouped tasks
+        return {todos, inProgress, completed, onHold};
+      })
     );
-  }*/
+  }
 
-/*  deleteTicket(id: number): void {
-    this.ticketsData.update((currentTickets) =>
-      currentTickets.filter((ticket) => ticket.id !== id)
-    );
-  }*/
 
+  /* addTaskKanban(task: Todos): void {
+     const currentTodos = this.todos();
+     const newTask = {
+       ...task,
+       id: currentTodos.length
+         ? currentTodos[currentTodos.length - 1].id + 1
+         : 1, // Generate a new ID
+     };
+     this.todos.set([...currentTodos, newTask]);
+   }
+
+   editTask(updatedTask: Todos): void {
+     const currentTodos = this.todos();
+     const updatedTodos = currentTodos.map((task: { id: number }) =>
+       task.id === updatedTask.id ? updatedTask : task
+     );
+     this.todos.set(updatedTodos);
+
+     this.updateTaskInList(this.inProgress(), updatedTask);
+     this.updateTaskInList(this.completed(), updatedTask);
+     this.updateTaskInList(this.onHold(), updatedTask);
+   }
+
+   private updateTaskInList(taskList: Todos[], updatedTask: Todos): void {
+     const updatedList = taskList.map((task) =>
+       task.id === updatedTask.id ? updatedTask : task
+     );
+     if (taskList === this.inProgress()) {
+       this.inProgress.set(updatedList);
+     } else if (taskList === this.completed()) {
+       this.completed.set(updatedList);
+     } else if (taskList === this.onHold()) {
+       this.onHold.set(updatedList);
+     }
+   }
+
+   deleteTaskKanban(taskId: number): void {
+     this.todos.set(
+       this.todos().filter((task: { id: number }) => task.id !== taskId)
+     );
+     this.inProgress.set(
+       this.inProgress().filter((task: { id: number }) => task.id !== taskId)
+     );
+     this.completed.set(
+       this.completed().filter((task: { id: number }) => task.id !== taskId)
+     );
+     this.onHold.set(
+       this.onHold().filter((task: { id: number }) => task.id !== taskId)
+     );
+   }
+ */
 
   // coming from backend
   findAllTasks(): Observable<Task[]> {
@@ -77,7 +118,7 @@ export class TaskService {
   }
 
   findTaskByUuid(uuid: string | undefined): Observable<Task> {
-    return this.http.get<Task>(`${this.backendUrl}/`+uuid);
+    return this.http.get<Task>(`${this.backendUrl}/` + uuid);
   }
 
   addTask(newTask: Task): Observable<Task> {
@@ -94,6 +135,10 @@ export class TaskService {
 
   removeTaskFromUser(uuidTask: string | undefined, uuidUser: string | undefined): Observable<any> {
     return this.http.post<any>(`${this.backendUrl}/removeuser/` + uuidTask + `/` + uuidUser, null);
+  }
+
+  saveAll(uuids: (Task | undefined)[]):Observable<any> {
+    return this.http.post<any>(`${this.backendUrl}/saveAll`, uuids);
   }
 
 }

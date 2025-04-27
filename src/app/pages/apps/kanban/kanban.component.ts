@@ -1,17 +1,16 @@
 import {Component} from '@angular/core';
 import {CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem,} from '@angular/cdk/drag-drop';
 import {MatDialog} from '@angular/material/dialog';
-import {AppKanbanDialogComponent} from './kanban-dialog.component';
-import {AppOkDialogComponent} from './ok-dialog/ok-dialog.component';
 import {AppDeleteDialogComponent} from './delete-dialog/delete-dialog.component';
 import {MaterialModule} from 'src/app/material.module';
 import {CommonModule} from '@angular/common';
 import {TablerIconsModule} from 'angular-tabler-icons';
-import {KanbanService} from 'src/app/services/apps/kanban/kanban.service';
-import {Todos} from './kanban';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgScrollbarModule} from 'ngx-scrollbar';
 import {TaskService} from "../../../services/apps/ticket/task.service";
+import {Task} from "../../../services/models/tasks";
+import {RouterLink} from "@angular/router";
+import {AppOkDialogComponent} from "./ok-dialog/ok-dialog.component";
 
 // tslint:disable-next-line - Disables all
 
@@ -24,17 +23,17 @@ import {TaskService} from "../../../services/apps/ticket/task.service";
     TablerIconsModule,
     DragDropModule,
     NgScrollbarModule,
+    RouterLink,
   ]
 })
 export class AppKanbanComponent {
-  todos: Todos[] = [];
-  inprogress: Todos[] = [];
-  completed: Todos[] = [];
-  onhold: Todos[] = [];
+  todos: Task[] = [];
+  inprogress: Task[] = [];
+  completed: Task[] = [];
+  onhold: Task[] = [];
 
   constructor(
     public dialog: MatDialog,
-    public kanbanService: KanbanService,
     private snackBar: MatSnackBar,
     private taskService: TaskService,
   ) {
@@ -42,19 +41,17 @@ export class AppKanbanComponent {
   }
 
 
-/*  loadAllTickets(): void {
-    this.taskService.findAllTasks().subscribe((tasks) => this.allTask = tasks);
-  }*/
 
 
   loadTasks(): void {
-    const allTasks = this.kanbanService.getAllTasks();
-
-    this.todos = allTasks.todos;
-    this.inprogress = allTasks.inProgress;
-    this.completed = allTasks.completed;
-    this.onhold = allTasks.onHold;
+    this.taskService.getAllTasks().subscribe(allTasks => {
+      this.todos = allTasks.todos;
+      this.inprogress = allTasks.inProgress;
+      this.completed = allTasks.completed;
+      this.onhold = allTasks.onHold;
+    });
   }
+
 
   drop(event: CdkDragDrop<any[]>): void {
     if (event.previousContainer === event.container) {
@@ -71,41 +68,57 @@ export class AppKanbanComponent {
         event.currentIndex
       );
     }
+    this.updateTaskStatus(this.todos, 'TODO');
+    this.updateTaskStatus(this.inprogress, 'En_Cours');
+    this.updateTaskStatus(this.completed, 'Termine');
+    this.updateTaskStatus(this.onhold, 'En_Attente');  // Change status of all 'onhold' tasks
+
   }
 
   openDialog(action: string, obj: any): void {
-    obj.action = action;
+    // Update the status of all tasks before collecting UUIDs
 
-    const dialogRef = this.dialog.open(AppKanbanDialogComponent, {
-      data: obj,
-      autoFocus: false,
-    });
+    // Log the tasks after the status update to confirm changes
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result.event === 'Add') {
-        this.kanbanService.addTask(result.data);
-        this.loadTasks();
-        this.dialog.open(AppOkDialogComponent);
-        this.showSnackbar('Task added successfully!');
-      }
-      if (result.event === 'Edit') {
-        this.kanbanService.editTask(result.data);
-        this.loadTasks();
-      }
+
+    console.log(this.todos)
+    // Only proceed to the saving if the action is 'Save'
+    if (action === 'Save') {
+      // Collect all UUIDs from each category
+      const allTasks = [
+        ...this.todos,
+        ...this.inprogress,
+        ...this.completed,
+        ...this.onhold
+      ];
+
+      // Call the saveAll method to save the tasks
+      this.taskService.saveAll(allTasks).subscribe({
+        next: () => {
+          this.loadTasks();  // Reload tasks after saving
+          this.dialog.open(AppOkDialogComponent);  // Open a success dialog
+          this.showSnackbar('Tasks saved successfully!');  // Show a success message
+        },
+        error: (err) => {
+          this.showSnackbar('Error saving tasks.');
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  onImageError(event: Event) {
+    const target = event.target as HTMLImageElement;
+    target.src = 'assets/images/profile/no-user.jpg';
+  }
+
+// Helper method to update the status of tasks
+  updateTaskStatus(tasks: any[], status: string): void {
+    tasks.forEach(task => {
+      task.status = status;  // Update the task status
     });
   }
 
-  deleteTask(t: Todos) {
-    const del = this.dialog.open(AppDeleteDialogComponent);
-
-    del.afterClosed().subscribe((result) => {
-      if (result === 'true') {
-        this.kanbanService.deleteTask(t.id);
-        this.loadTasks();
-        this.showSnackbar('Task deleted successfully!');
-      }
-    });
-  }
 
   showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
@@ -117,18 +130,16 @@ export class AppKanbanComponent {
 
   //taskProperty bgcolor
   getTaskClass(taskProperty: string | any): any {
-    return taskProperty === 'Design'
-      ? 'bg-success'
-      : taskProperty === 'Mobile'
-        ? 'bg-primary'
-        : taskProperty === 'UX Stage'
-          ? 'bg-warning'
-          : taskProperty === 'Research'
-            ? 'bg-error'
-            : taskProperty === 'Data Science'
-              ? 'bg-secondary'
-              : taskProperty === 'Branding'
-                ? 'bg-primary'
-                : '';
+    return taskProperty === 'SUPER_LOW'
+      ? 'bg-success'  // Green for SUPER_LOW
+      : taskProperty === 'LOW'
+        ? 'bg-primary'  // Blue for LOW
+        : taskProperty === 'MEDIUM'
+          ? 'bg-warning'  // Yellow for MEDIUM
+          : taskProperty === 'HIGH'
+            ? 'bg-danger'  // Strong Red for HIGH
+            : taskProperty === 'URGENT'
+              ? 'bg-dark-red'  // Darker Red for URGENT
+              : '';
   }
 }
