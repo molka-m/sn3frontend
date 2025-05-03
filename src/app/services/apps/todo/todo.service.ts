@@ -71,8 +71,8 @@ export class TodoService {
     });
   }
 
-    public deleteTodo(uuid: string): void {
-     // this.todos.update((todos) => todos.filter((todo) => todo.id !== id));
+     deleteTodo(uuid: string): Observable<any> {
+      return this.http.delete<Task>(`${this.backendUrl}/delete/`+ uuid);
     }
 
   public editTodo(uuid: string, message: string): void {
