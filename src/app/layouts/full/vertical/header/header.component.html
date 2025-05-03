@@ -186,15 +186,15 @@
       </span>
     </div>
 
-    @for (notification of notifications; track notification.title) {
+    @for (notification of notifications; track notification.id) {
       <button mat-menu-item class="p-x-32 p-y-16">
         <div class="d-flex align-items-center">
-          <img [src]="notification.img" class="rounded-circle" width="48"/>
+          <img [src]="notification.user.imagePath" class="rounded-circle" width="48"/>
           <div class="m-l-16">
             <h5 class="f-s-14 f-w-600 m-0 ">
-              {{ notification.title }}
+              {{ notification.notification.title }}
             </h5>
-            <span>{{ notification.subtitle }}</span>
+            <span>{{ notification.notification.message }}</span>
           </div>
         </div>
       </button>

@@ -14,6 +14,8 @@ import {UserService} from "../../../../services/apps/user/user.service";
 import {User} from "../../../../services/models/user";
 import * as console from "node:console";
 import {AuthService} from "../../../../services/apps/auth/auth.service";
+import { UserNotification } from 'src/app/services/models/userNotification';
+import {NotificationService} from "../../../../services/apps/notification/notification.service";
 
 interface notifications {
   id: number;
@@ -106,7 +108,8 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private router : Router,
     public dialog: MatDialog,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private notificationService: NotificationService
   ) {
     translate.setDefaultLang('en');
   }
@@ -158,38 +161,7 @@ export class HeaderComponent implements OnInit {
     this.selectedLanguage = lang;
   }
 
-  notifications: notifications[] = [
-    {
-      id: 1,
-      img: '/assets/images/profile/user-1.jpg',
-      title: 'Roman Joined thes Team!',
-      subtitle: 'Congratulate him',
-    },
-    {
-      id: 2,
-      img: '/assets/images/profile/user-2.jpg',
-      title: 'New message received',
-      subtitle: 'Salma sent you new message',
-    },
-    {
-      id: 3,
-      img: '/assets/images/profile/user-3.jpg',
-      title: 'New Payment received',
-      subtitle: 'Check your earnings',
-    },
-    {
-      id: 4,
-      img: '/assets/images/profile/user-4.jpg',
-      title: 'Jolly completed tasks',
-      subtitle: 'Assign her new tasks',
-    },
-    {
-      id: 5,
-      img: '/assets/images/profile/user-5.jpg',
-      title: 'Roman Joined the Team!',
-      subtitle: 'Congratulatse him',
-    },
-  ];
+  notifications: UserNotification[] = [];
 
   profiledd: profiledd[] = [
     {
@@ -319,6 +291,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUser();
+    this.notificationService.getNotifications().subscribe((notification) => {
+      // Assuming notification matches the structure of your notifications[]
+      this.notifications.unshift(notification); // add to top of list
+    });
   }
 }
 
