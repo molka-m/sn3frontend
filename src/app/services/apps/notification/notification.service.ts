@@ -12,6 +12,7 @@ export class NotificationService {
   private notificationSubject = new Subject<any>();
 
   constructor() {
+    const userEmail = sessionStorage.getItem('userEmail');
     this.stompClient = new Client({
       brokerURL: 'ws://localhost:8081/ws',
       webSocketFactory: () => new SockJS('http://localhost:8081/ws'),
@@ -20,7 +21,7 @@ export class NotificationService {
     });
 
     this.stompClient.onConnect = () => {
-      this.stompClient.subscribe('/topic/notifications', (message: Message) => {
+      this.stompClient.subscribe(`/topic/notifications/${userEmail}`, (message: Message) => {
         console.log(message.body)
         this.notificationSubject.next(JSON.parse(message.body));
       });
