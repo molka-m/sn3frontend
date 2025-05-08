@@ -33,6 +33,8 @@ export class AppApplicationComponent implements AfterViewInit, OnInit {
     Object.create(null);
 
   searchText: any;
+  isIngenieur: boolean=false;
+
 
   displayedColumns: string[] = [
     'name',
@@ -56,6 +58,11 @@ export class AppApplicationComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.loadAllApplication();
+    const userRole = sessionStorage.getItem('userRole') ?? '';
+    if (userRole ==='INGENIEUR')
+    {
+      this.isIngenieur=true
+    }
   }
 
   loadAllApplication(): void {

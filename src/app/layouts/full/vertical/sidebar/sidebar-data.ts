@@ -29,7 +29,7 @@ export const navItems: NavItem[] = [
     displayName: 'Application',
     iconName: 'brand-ctemplar',
     route: 'apps/application',
-    roles: ['ADMIN', 'RDP']
+    roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
   {
@@ -43,7 +43,7 @@ export const navItems: NavItem[] = [
     displayName: 'Group',
     iconName: 'phone',
     route: 'apps/group',
-    roles: ['ADMIN', 'RDP']
+    roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
   /*  {
@@ -137,7 +137,7 @@ export const navItems: NavItem[] = [
     roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
-  {
+  /*{
     displayName: 'Blog',
     iconName: 'chart-donut-3',
     route: 'apps/blog',
@@ -154,7 +154,7 @@ export const navItems: NavItem[] = [
         route: 'apps/blog/detail/Early Black Friday Amazon deals: cheap TVs, headphones, laptops',
       },
     ],
-  },
+  },*/
  /* {
     navCap: 'Pages',
   },

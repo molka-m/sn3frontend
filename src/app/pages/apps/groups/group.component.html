@@ -58,13 +58,13 @@
             >
               <i-tabler name="eye" class="icon-18"></i-tabler>
             </a>
-            <a
+            <a *ngIf="!isIngenieur"
               (click)="openDialog('Update', element)"
               class="m-r-10 cursor-pointer"
             >
               <i-tabler name="edit" class="icon-18"></i-tabler>
             </a>
-            <a
+            <a *ngIf="!isIngenieur"
               (click)="openDialog('Delete', element)"
               class="cursor-pointer"
             >
