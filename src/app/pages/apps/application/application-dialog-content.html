@@ -112,7 +112,7 @@
             [name]="'bandwidth_' + user.uuid"
             required
           >
-            <mat-option *ngFor="let bw of bandwidthOptions" [value]="bw">
+            <mat-option *ngFor="let bw of getAvailableBandwidthOptions(user)" [value]="bw">
               {{ bw }}
             </mat-option>
           </mat-select>

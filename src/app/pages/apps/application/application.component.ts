@@ -146,7 +146,7 @@ export class AppApplicationDialogContentComponent {
   users: User[] = [];
   selectGroup: Group;
   selectedUsers: User[];
-  uuidsToRemove: string[];
+  uuidsToRemove: string[] =[];
   bandwidthOptions: string[] = ['1/5', '2/5', '3/5', '4/5', '5/5'];
   userBandwidths: { [uuid: string]: string } = {};
   joiningDate = new FormControl();
@@ -169,6 +169,22 @@ export class AppApplicationDialogContentComponent {
 
   }
 
+  getAvailableBandwidthOptions(user: User): string[] {
+    const mapping = {
+      '1/5': 20,
+      '2/5': 40,
+      '3/5': 60,
+      '4/5': 80,
+      '5/5': 100,
+    };
+
+    return this.bandwidthOptions.filter(option => {
+      const required = mapping[option as keyof typeof mapping];
+      return user.remainingBandWidth! >= required;
+    });
+  }
+
+
   doAction(): void {
     if (this.action === 'Add') {
       console.log(this.application)
@@ -189,12 +205,6 @@ export class AppApplicationDialogContentComponent {
           this.openSnackBar('Failed to add application!', 'Close');
         }
       );
-
-      // }//TODO : finish the update low priority
-      /*  else if (this.action === 'Update') {
-         this.employeeService.updateEmployee(this.user);
-         this.dialogRef.close({ event: 'Update' });
-         this.openSnackBar('Employee Updated successfully!', 'Close');*/
 
     } else if (this.action === 'Assign' && this.application.applicationName && this.selectGroup.uuid) {
       const userApplicationAssignmentRequest = {

@@ -11,5 +11,6 @@ export interface User {
   uuid?: string;
   DateOfJoining?: Date;
   imagePath?: string;
+  remainingBandWidth? : number;
 
 }
