@@ -74,6 +74,8 @@
             id="position"
             placeholder="Select Group"
             [(ngModel)]="selectGroup"
+            [compareWith]="compareGroups"
+            (selectionChange)="onGroupChange(selectGroup)"
           >
             <mat-option *ngFor="let group of groupes" [value]="group">
               {{ group.groupName }}
@@ -81,12 +83,48 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <div class="col-12">
+        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">List of users</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select [(ngModel)]="selectedUsers"   [compareWith]="compareUsers" name="users" multiple>
+            <mat-option *ngFor="let user of users" [value]="user">
+              {{ user.firstName }} {{ user.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <ng-container *ngFor="let user of selectedUsers; let i = index">
+        <div class="d-flex justify-content-between align-items-center m-b-2">
+          <div class="d-flex align-items-center">
+            <mat-label class="f-s-14 f-w-600 m-0">
+              Bandwidth for {{ user.firstName }} {{ user.lastName }}
+            </mat-label>
+          </div>
+          <button mat-icon-button color="warn" (click)="removeUser(i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select
+            [ngModel]="getUserBandwidth(user.uuid)"
+            (ngModelChange)="setUserBandwidth(user.uuid, $event)"
+            [name]="'bandwidth_' + user.uuid"
+            required
+          >
+            <mat-option *ngFor="let bw of bandwidthOptions" [value]="bw">
+              {{ bw }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+
       <button
         mat-flat-button
         (click)="doAction()"
         [disabled]="!applicatioForm.valid"
       >
-        {{ action }}
+        Save
       </button>
       <button
         mat-flat-button

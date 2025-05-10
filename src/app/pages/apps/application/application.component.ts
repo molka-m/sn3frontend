@@ -10,11 +10,12 @@ import {TablerIconsModule} from 'angular-tabler-icons';
 import {EmployeeService} from 'src/app/services/apps/employee/employee.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {User} from "../../../services/models/user";
-import {Observable} from "rxjs";
+import {forkJoin, Observable} from "rxjs";
 import {Application} from "../../../services/models/application";
 import {ApplicationService} from "../../../services/apps/application/application.service";
 import {Group} from "../../../services/models/group";
 import {GroupService} from "../../../services/apps/Group/group.service";
+import {UserService} from "../../../services/apps/user/user.service";
 
 @Component({
   selector: 'app-user',
@@ -33,7 +34,7 @@ export class AppApplicationComponent implements AfterViewInit, OnInit {
     Object.create(null);
 
   searchText: any;
-  isIngenieur: boolean=false;
+  isIngenieur: boolean = false;
 
 
   displayedColumns: string[] = [
@@ -59,9 +60,8 @@ export class AppApplicationComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.loadAllApplication();
     const userRole = sessionStorage.getItem('userRole') ?? '';
-    if (userRole ==='INGENIEUR')
-    {
-      this.isIngenieur=true
+    if (userRole === 'INGENIEUR') {
+      this.isIngenieur = true
     }
   }
 
@@ -102,7 +102,9 @@ export class AppApplicationComponent implements AfterViewInit, OnInit {
   }
 
   openDialog(action: string, application: Application | any): void {
-    const dialogRef = this.dialog.open(AppApplicationDialogContentComponent, {
+    console.log(this.applications)
+    console.log(application)
+    const dialogRef = this.dialog.open(AppApplicationDialogContentComponent, { width : '700px',
       data: {action, application}, autoFocus: false
     });
 
@@ -141,7 +143,12 @@ export class AppApplicationDialogContentComponent {
   application: Application;
   selectedImage: any = '';
   groupes: Group[] = [];
+  users: User[] = [];
   selectGroup: Group;
+  selectedUsers: User[];
+  uuidsToRemove: string[];
+  bandwidthOptions: string[] = ['1/5', '2/5', '3/5', '4/5', '5/5'];
+  userBandwidths: { [uuid: string]: string } = {};
   joiningDate = new FormControl();
 
   constructor(
@@ -150,13 +157,15 @@ export class AppApplicationDialogContentComponent {
     private snackBar: MatSnackBar,
     private applicationService: ApplicationService,
     private groupService: GroupService,
+    private userService: UserService,
     // @Optional() is used to prevent error if no data is passed
     @Optional() @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {
     this.action = data.action;
     this.application = {...data.application};
+    console.log(this.application)
     this.loadAllGroups();
-    console.log(this.groupes, "check")
+    this.loadApplicationAssignmentDetails(this.application.uuid);
 
   }
 
@@ -188,12 +197,36 @@ export class AppApplicationDialogContentComponent {
          this.openSnackBar('Employee Updated successfully!', 'Close');*/
 
     } else if (this.action === 'Assign' && this.application.applicationName && this.selectGroup.uuid) {
-      console.log(this.action)
-      this.applicationService.affectGroupToApplication(this.application.applicationName, this.selectGroup.uuid).subscribe(
+      const userApplicationAssignmentRequest = {
+        userAssignmentDetails: this.selectedUsers.map(user => {
+          const uuid = user.uuid;
+
+          // Ensure uuid is defined and a string
+          if (uuid === undefined) {
+            // Handle the case where uuid is undefined, perhaps by skipping or assigning a default value.
+            return {
+              uuidUser: uuid,
+              userBandWidth: 0
+            };
+          }
+
+          const userBandWidth = this.userBandwidths[uuid]
+            ? (parseInt(this.userBandwidths[uuid].split('/')[0], 10) / 5) * 100
+            : 0;
+
+          return {
+            uuidUser: uuid,
+            userBandWidth
+          };
+        })
+      };
+
+
+      this.applicationService.affectGroupToApplication(this.application.applicationName, this.selectGroup.uuid,userApplicationAssignmentRequest).subscribe(
         () => {
           // Only close the dialog and show the snackbar after deletion succeeds
           this.dialogRef.close({event: 'Assign'});
-          this.openSnackBar('Group assigned successfully!', 'Close');
+          this.openSnackBar('Group And Users assigned successfully!', 'Close');
         },
         (error) => {
           console.error('Error during assigning group:', error);
@@ -244,5 +277,65 @@ export class AppApplicationDialogContentComponent {
   closeDialog(): void {
     this.dialogRef.close({event: 'Cancel'});
   }
+
+  getUserBandwidth(uuid: string | undefined): string {
+    return uuid ? this.userBandwidths[uuid] || '' : '';
+  }
+
+  setUserBandwidth(uuid: string | undefined, value: string): void {
+    if (uuid) {
+      this.userBandwidths[uuid] = value;
+    }
+  }
+
+
+  onGroupChange(selectGroup: Group) {
+
+    this.userService.findByGroupUUIDAndNotAssinged(this.application.uuid,selectGroup.uuid).subscribe(users => {
+      this.users = users;
+    });
+    this.selectedUsers = [];
+    this.userBandwidths = {};
+  }
+
+  private loadApplicationAssignmentDetails(uuid: string | undefined): void {
+    this.applicationService.getApplicationDetails(uuid).subscribe(response => {
+      this.selectGroup = response.group;
+      this.users = response.applicationAssignmentDetails.map((d: { userDto: any; }) => d.userDto);
+
+      // Must assign after `this.users` is set
+      this.selectedUsers = response.applicationAssignmentDetails.map((d: { userDto: any; }) => d.userDto);
+      console.log(this.selectedUsers);
+
+      this.userBandwidths = {};
+      response.applicationAssignmentDetails.forEach((detail: { userBandWidth: number; userDto: { uuid: string | number; }; }) => {
+        const fraction = detail.userBandWidth / 20;
+        this.userBandwidths[detail.userDto.uuid] = `${fraction}/5`;
+      });
+    });
+
+  }
+  removeUser(index: number): void {
+    const user = this.selectedUsers[index];
+    if (user && user.uuid) {
+      this.uuidsToRemove.push(user.uuid);
+      delete this.userBandwidths[user.uuid];
+    }
+
+    // Instead of splice (which mutates the array), use filter for better change detection
+    this.selectedUsers = this.selectedUsers.filter((_, i) => i !== index);
+    this.applicationService.removeUsersFromApplication(this.application.uuid,this.uuidsToRemove).subscribe(value=>{
+    console.log("user Removed successfully!");
+
+    });
+  }
+
+
+
+
+
+  compareUsers = (a: User, b: User): boolean => a?.uuid === b?.uuid;
+  compareGroups = (a: Group, b: Group): boolean => a?.uuid === b?.uuid;
+
 
 }

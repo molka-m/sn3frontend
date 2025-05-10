@@ -51,4 +51,8 @@ export class UserService {
   findByGroupUUID(uuid: string | undefined): Observable<User[]> {
     return this.http.get<User[]>(`${this.backendUrl}/by-group/${uuid}`);
   }
+
+  findByGroupUUIDAndNotAssinged(uuidApplication :string | undefined,uuidGroup: string | undefined): Observable<User[]> {
+    return this.http.get<User[]>(`${this.backendUrl}/by-group-and-not-assigned/${uuidApplication}/${uuidGroup}`);
+  }
 }
