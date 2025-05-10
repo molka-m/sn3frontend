@@ -88,14 +88,17 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
 
   openDialog(action: string, task: Task | any): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      data: {action, task},
+      data: { action, task },
       autoFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.loadAllTickets();
+      if (result?.event === 'Delete' || result?.event === 'Assign' || result?.event === 'Add') {
+        this.loadAllTickets();
+      }
     });
   }
+
 
 
   countTicketsByStatus(status: string): number {
@@ -185,10 +188,17 @@ export class TaskDialogComponent {
       // this.ticketService.addTicket(this.local_data);
       // this.openSnackBar('Ticket added successfully!', 'Close');
     } else if (this.action === 'Delete') {
-      //   this.ticketService.deleteTicket(this.local_data.id);
-      this.openSnackBar('Ticket deleted successfully!', 'Close');
+      this.taskService.deleteTask(this.task.uuid!).subscribe(
+        () => {
+          this.openSnackBar('Ticket deleted successfully!', 'Close');
+          this.dialogRef.close({event: 'Delete'}); // Only close after successful delete
+        },
+        (error) => {
+          console.error('Error deleting task:', error);
+          this.openSnackBar('Failed to delete task', 'Close');
+        }
+      );
     }
-    this.dialogRef.close();
   }
 
 
