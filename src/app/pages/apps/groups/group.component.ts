@@ -15,7 +15,7 @@ import {GroupService} from "../../../services/apps/Group/group.service";
 import {RouterLink} from "@angular/router";
 
 @Component({
-  selector: 'app-user',
+  selector: 'app-group',
   templateUrl: './group.component.html',
   imports: [
     MaterialModule,
@@ -37,6 +37,7 @@ export class AppGroupComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = [
     'name',
     'CreationDate',
+    'Applications',
     'action'
   ];
 
@@ -110,6 +111,7 @@ export class AppGroupComponent implements AfterViewInit, OnInit {
       }
     });
   }
+
 }
 
 interface DialogData {

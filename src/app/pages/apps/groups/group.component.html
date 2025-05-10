@@ -46,6 +46,19 @@
             {{ element.creationDate }}
           </td>
         </ng-container>
+        <ng-container matColumnDef="Applications">
+          <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
+            Applications
+          </th>
+          <td mat-cell *matCellDef="let element" class="f-s-14">
+            <ul class="m-0 p-0" style="list-style: none;">
+              <li *ngFor="let app of element.applications">
+                {{ app.applicationName }}
+              </li>
+            </ul>
+          </td>
+
+        </ng-container>
         <ng-container matColumnDef="action">
 
           <th mat-header-cell *matHeaderCellDef class="f-s-16 f-w-600">
