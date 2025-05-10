@@ -12,5 +12,7 @@ export interface User {
   DateOfJoining?: Date;
   imagePath?: string;
   remainingBandWidth? : number;
+  numberOfApplicationsWorkingOn? : number;
+  numberOfTask? : number;
 
 }

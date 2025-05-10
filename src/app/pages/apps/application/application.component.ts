@@ -18,7 +18,7 @@ import {GroupService} from "../../../services/apps/Group/group.service";
 import {UserService} from "../../../services/apps/user/user.service";
 
 @Component({
-  selector: 'app-user',
+  selector: 'app-application',
   templateUrl: './application.component.html',
   imports: [
     MaterialModule,
