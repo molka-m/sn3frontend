@@ -9,15 +9,19 @@ import {AuthenticationResponse} from "../../../services/models/authenticationRes
 import {jwtDecode} from "jwt-decode";
 import {UserService} from "../../../services/apps/user/user.service";
 import {User} from "../../../services/models/user";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-side-login',
-  imports: [RouterModule, MaterialModule, FormsModule, ReactiveFormsModule, BrandingComponent],
+  imports: [RouterModule, MaterialModule, FormsModule, ReactiveFormsModule, BrandingComponent, NgIf],
   templateUrl: './side-login.component.html'
 })
 export class AppSideLoginComponent {
   options = this.settings.getOptions();
   user: User = {}
+  errorMessage = '';
+  hasError = false;
+  isLoading = false;
 
   constructor(private settings: CoreService, private router: Router, private authService: AuthService, private userService: UserService) {
   }
@@ -32,6 +36,7 @@ export class AppSideLoginComponent {
   }
 
   submit() {
+    this.isLoading = true
     if (this.form.controls.uname.value != null && this.form.controls.password.value !== null) {
 
       this.authService.signIn(this.form.controls.uname.value.trim(), this.form.controls.password.value.trim())
@@ -49,13 +54,18 @@ export class AppSideLoginComponent {
             }, 1500);
           },
           (error) => {
-            console.error('Login error', error);
+            this.hasError = true;
+            this.isLoading = false;
+            this.errorMessage = "Please verify your credentials";
             // this.showErrorCredentials()
 
             // Show error message or handle as needed
           }
         );
     } else {
+      this.hasError = true;
+      this.isLoading = false;
+      this.errorMessage = "Please verify your credentials";
       console.error('Email or password is empty.');
       // this.showErrorViaMessages()
     }
@@ -63,16 +73,16 @@ export class AppSideLoginComponent {
 
   async getUserByEmail(userEmail: string): Promise<void> {
 
-      this.userService.getUserByEmail(userEmail).subscribe(
-        (response: User) => {
-          this.user = response;
-          sessionStorage.setItem('userRole', response.role?.toString() ?? '');
-          sessionStorage.setItem('userEmail', userEmail);
-        },
-        (error) => {
-          console.error('restoring module error', error);
-        }
-      );
-    }
+    this.userService.getUserByEmail(userEmail).subscribe(
+      (response: User) => {
+        this.user = response;
+        sessionStorage.setItem('userRole', response.role?.toString() ?? '');
+        sessionStorage.setItem('userEmail', userEmail);
+      },
+      (error) => {
+        console.error('restoring module error', error);
+      }
+    );
+  }
 
 }

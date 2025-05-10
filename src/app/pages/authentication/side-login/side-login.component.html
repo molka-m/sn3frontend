@@ -56,7 +56,9 @@
             </div>
 
           <!--  <div class="or-border m-t-30">or sign in with</div>-->
-
+            <div *ngIf="hasError" style="color: red; font-weight: 500; margin-bottom: 16px;">
+              {{ errorMessage }}
+            </div>
             <form class="m-t-30" [formGroup]="form" (ngSubmit)="submit()">
               <mat-label class="f-s-14 f-w-600 m-b-12 d-block"
                 >Username</mat-label
@@ -111,14 +113,24 @@
               <button
                 mat-flat-button
                 color="primary"
-                class="w-100"
-                [disabled]="!form.valid"
+                class="w-100 d-flex align-items-center justify-content-center"
+                [disabled]="!form.valid || isLoading"
               >
-                Sign In
+                <mat-progress-spinner
+                  *ngIf="isLoading"
+                  diameter="20"
+                  mode="indeterminate"
+                  color="accent"
+                  class="m-r-8"
+                  [style.display]="'inline-block'"
+                ></mat-progress-spinner>
+                <span *ngIf="!isLoading">Sign In</span>
+                <span *ngIf="isLoading">Signing In...</span>
               </button>
+
               <!-- input -->
             </form>
-            <span class="d-block f-w-500 d-block m-t-24"
+<!--            <span class="d-block f-w-500 d-block m-t-24"
               >New to Modernize?
               <a
                 [routerLink]="['/authentication/side-register']"
@@ -126,7 +138,7 @@
               >
                 Create an account</a
               >
-            </span>
+            </span>-->
           </div>
         </div>
       </div>
