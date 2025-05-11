@@ -56,7 +56,10 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
 
 
   loadAllTickets(): void {
-    this.taskService.findAllTasks().subscribe((tasks) => this.dataSource.data = tasks);
+    this.taskService.findAllTasks().subscribe((tasks) => {
+      this.dataSource.data = tasks;
+      this.totalCount = tasks.length;
+    });
     this.updateCounts();
   }
 
@@ -93,7 +96,8 @@ export class AppTasklistComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.event === 'Delete' || result?.event === 'Assign' || result?.event === 'Add') {
+      console.log(result);
+      if (result?.event === 'Delete' || result?.event === 'Assign' || result?.event === 'Add' || result?.event === 'Refresh') {
         this.loadAllTickets();
       }
     });
@@ -209,7 +213,6 @@ export class TaskDialogComponent {
       (createdTask: Task) => {
         console.log("Task created successfully:", createdTask);
         // Close the dialog only after user creation
-        this.dialogRef.close();
         // Open success dialog
         const successDialogRef = this.dialog.open(AppAddApplicationComponent);
         successDialogRef.afterClosed().subscribe(() => {

@@ -12,34 +12,34 @@
   <div class="col-sm-6 col-lg-3">
     <mat-card
       class="shadow-none p-30 bg-light-warning text-center cursor-pointer rounded"
-      (click)="btnCategoryClick('InProgress')"
+      (click)="btnCategoryClick('Todo')"
     >
       <h3 class="f-s-24 text-warning m-b-4">
-        {{ countTicketsByStatus("Inprogress") }}
+        {{ countTicketsByStatus("Todo") }}
       </h3>
-      <h6 class="text-warning f-w-600 m-0 f-s-16">In Progress</h6>
+      <h6 class="text-warning f-w-600 m-0 f-s-16">In Todo</h6>
     </mat-card>
   </div>
   <div class="col-sm-6 col-lg-3">
     <mat-card
       class="shadow-none p-30 bg-light-success text-center cursor-pointer rounded"
-      (click)="btnCategoryClick('Open')"
+      (click)="btnCategoryClick('En_Cours')"
     >
       <h3 class="f-s-24 text-success m-b-4">
-        {{ countTicketsByStatus("Open") }}
+        {{ countTicketsByStatus("En_Cours") }}
       </h3>
-      <h6 class="text-success f-w-600 m-0 f-s-16">Open</h6>
+      <h6 class="text-success f-w-600 m-0 f-s-16">In Progress</h6>
     </mat-card>
   </div>
   <div class="col-sm-6 col-lg-3">
     <mat-card
       class="shadow-none p-30 bg-light-error text-center cursor-pointer rounded"
-      (click)="btnCategoryClick('Closed')"
+      (click)="btnCategoryClick('Termine')"
     >
       <h3 class="f-s-24 text-error m-b-4">
-        {{ countTicketsByStatus("Closed") }}
+        {{ countTicketsByStatus("Termine") }}
       </h3>
-      <h6 class="text-error f-w-600 m-0 f-s-16">Closed</h6>
+      <h6 class="text-error f-w-600 m-0 f-s-16">Completed</h6>
     </mat-card>
   </div>
 </div>

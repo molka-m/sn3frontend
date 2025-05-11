@@ -22,7 +22,7 @@
       [opened]="!isOver()"
       class="mail-sidebar"
     >
-      <div class="p-16">
+      <div *ngIf="!isIngenieur" class="p-16">
         <button
           mat-flat-button
           (click)="openAddContactDialog()"
@@ -159,7 +159,7 @@
                        <!--   }-->
                         </span>
                         <!-- Delete Icon -->
-                        <i-tabler
+                        <i-tabler *ngIf="!isIngenieur"
                           name="trash"
                           class="icon-16 cursor-pointer"
                           (click)="deleteContact(collab)"

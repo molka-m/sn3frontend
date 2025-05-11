@@ -36,6 +36,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class AppListingComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
+  isIngenieur : boolean = false;
   private _mobileQueryListener: () => void;
 
   constructor(
@@ -82,6 +83,8 @@ export class AppListingComponent implements OnInit, OnDestroy {
     });
   }
 
+
+
   filteredCollaborateur = computed(() => {
     const selectedGroup = this.groupDisplayService.selectedLabel();
     if (selectedGroup !== null) {
@@ -95,6 +98,10 @@ export class AppListingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.labels = this.groupDisplayService.labels();
+    const userRole = sessionStorage.getItem('userRole') ?? '';
+    if (userRole === 'INGENIEUR') {
+      this.isIngenieur = true
+    }
     this.groupDisplayService.collaborateurList.set(
       this.groupDisplayService.collaborateurList()
     );
@@ -153,7 +160,6 @@ export class AppListingComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   openAddContactDialog(): void {
     const dialogRef = this.dialog.open(GroupFormDialogComponent, {
       width: '400px',

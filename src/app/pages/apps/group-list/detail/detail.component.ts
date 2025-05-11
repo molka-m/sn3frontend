@@ -33,7 +33,7 @@ export class AppContactListDetailComponent implements OnInit {
   formData = signal<any | null>(null);
   selectedCollaborateur = computed(() => this.groupDisplayService.getSelectedCollaborateur());
   private refresh$ = new BehaviorSubject<void>(undefined);
-
+  protected isIngenieur : boolean = false;
   constructor(
     public dialog: MatDialog,
     private groupDisplayService: GroupDisplayService,
@@ -55,6 +55,11 @@ export class AppContactListDetailComponent implements OnInit {
       this.collaborateur.set(contact);
       this.formData.set(contact ? {...contact} : null);
     });
+
+    const userRole = sessionStorage.getItem('userRole') ?? '';
+    if (userRole === 'INGENIEUR') {
+      this.isIngenieur = true
+    }
   }
 
   toggleStarred(collaborateur: User | null, event: Event): void {
