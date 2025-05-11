@@ -12,4 +12,5 @@ export interface Task {
   createdAt?: Date;
   lastModifiedAt?: Date;
   emailCreatedBy?: string;
+  groupName?: string;
 }

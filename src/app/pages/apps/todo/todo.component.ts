@@ -112,20 +112,39 @@ export class AppTodoComponent implements OnInit {
   addTodo(): void {
     const message = this.inputFg.get('mess')?.value;
     if (message) {
-      this.todoService.addTodo(message); // Call the service to add todo
-      this.inputFg.reset(); // Reset the input field
-      this.todos.set(this.todoService.getTodos());
+      this.inputFg.reset(); // Reset early for better UX
 
-      this.totalTodos.set(this.todos().length);
-      this.totalCompleted.set(
-        this.todos().filter((todo) => todo.completionStatus).length
-      );
-      this.totalIncomplete.set(
-        this.todos().filter((todo) => !todo.completionStatus).length
-      );
-      this.openSnackBar('Todo successfully added!', 'Close');
+      const newTodo: ToDo = {
+        uuid: '',
+        message,
+        completionStatus: false,
+        edit: false,
+        date: new Date(),
+        userEmail: sessionStorage.getItem('userEmail') || ''
+      };
+
+      this.todoService.addToDOb(newTodo).subscribe({
+        next: () => {
+          this.todoService.findToDosByUser().subscribe({
+            next: (todosFromBackend) => {
+              this.todos.set(todosFromBackend);
+              this.calculateTotals(todosFromBackend);
+              this.openSnackBar('Todo successfully added!', 'Close');
+            },
+            error: (err) => {
+              console.error('Failed to reload todos after adding', err);
+              this.openSnackBar('Failed to refresh todo list', 'Close');
+            }
+          });
+        },
+        error: (error) => {
+          console.error('Failed to add todo', error);
+          this.openSnackBar('Failed to add todo', 'Close');
+        }
+      });
     }
   }
+
 
   openSnackBar(message: string, action: string): void {
     this.snackBar.open(message, action, {
