@@ -12,7 +12,6 @@ import {NgScrollbarModule} from 'ngx-scrollbar';
 import {AppSettings} from 'src/app/config';
 import {UserService} from "../../../../services/apps/user/user.service";
 import {User} from "../../../../services/models/user";
-import * as console from "node:console";
 import {AuthService} from "../../../../services/apps/auth/auth.service";
 import { UserNotification } from 'src/app/services/models/userNotification';
 import {NotificationService} from "../../../../services/apps/notification/notification.service";

@@ -21,7 +21,6 @@ import {AppBreadcrumbComponent} from './shared/breadcrumb/breadcrumb.component';
 import {CustomizerComponent} from './shared/customizer/customizer.component';
 import {User} from "../../services/models/user";
 import {UserService} from "../../services/apps/user/user.service";
-import console from "node:console";
 import {AuthService} from "../../services/apps/auth/auth.service";
 import {NavItem} from "./vertical/sidebar/nav-item/nav-item";
 
