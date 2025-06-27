@@ -33,6 +33,7 @@ import {ActivatedRoute, Router} from "@angular/router";
     MatDividerModule,
   ],
   templateUrl: './listing.component.html',
+  standalone: true
 })
 export class AppListingComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;

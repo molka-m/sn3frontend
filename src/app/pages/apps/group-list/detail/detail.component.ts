@@ -26,6 +26,7 @@ import {UserService} from "../../../../services/apps/user/user.service";
     NgScrollbarModule,
   ],
   templateUrl: './detail.component.html',
+  standalone: true
 })
 export class AppContactListDetailComponent implements OnInit {
   isEditing = signal<boolean>(false);

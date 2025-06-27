@@ -144,6 +144,7 @@ export class AppApplicationDialogContentComponent {
   selectedImage: any = '';
   groupes: Group[] = [];
   users: User[] = [];
+  notAssignedUsers: User[] = [];
   selectGroup: Group;
   selectedUsers: User[];
   uuidsToRemove: string[] =[];
@@ -163,7 +164,6 @@ export class AppApplicationDialogContentComponent {
   ) {
     this.action = data.action;
     this.application = {...data.application};
-    console.log(this.application)
     this.loadAllGroups();
     this.loadApplicationAssignmentDetails(this.application.uuid);
 
@@ -312,6 +312,10 @@ export class AppApplicationDialogContentComponent {
     this.applicationService.getApplicationDetails(uuid).subscribe(response => {
       this.selectGroup = response.group;
       this.users = response.applicationAssignmentDetails.map((d: { userDto: any; }) => d.userDto);
+      this.userService.findByGroupUUIDAndNotAssinged(this.application.uuid,this.application.group?.uuid).subscribe(users => {
+        this.notAssignedUsers = users;
+        this.users.push(...this.notAssignedUsers)
+      });
 
       // Must assign after `this.users` is set
       this.selectedUsers = response.applicationAssignmentDetails.map((d: { userDto: any; }) => d.userDto);

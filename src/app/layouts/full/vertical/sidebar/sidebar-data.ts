@@ -55,7 +55,7 @@ export const navItems: NavItem[] = [
     displayName: 'Calendar',
     iconName: 'calendar-event',
     route: 'apps/calendar',
-    roles: ['ADMIN', 'RDP']
+    roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
   /*  {
@@ -99,7 +99,7 @@ export const navItems: NavItem[] = [
     displayName: 'Tasks',
     iconName: 'ticket',
     route: 'apps/tasks',
-    roles: ['ADMIN', 'RDP']
+    roles: ['ADMIN', 'RDP','INGENIEUR']
 
   },
   /*{
