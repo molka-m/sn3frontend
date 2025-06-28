@@ -22,7 +22,7 @@ export const navItems: NavItem[] = [
     displayName: 'User',
     iconName: 'brand-ctemplar',
     route: 'apps/user',
-    roles: ['ADMIN']
+    roles: ['ADMIN','RDP']
 
   },
   {
