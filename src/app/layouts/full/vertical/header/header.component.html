@@ -186,19 +186,19 @@
       </span>
     </div>
 
-    @for (notification of notifications; track notification.id) {
+<!--    @for (notification of notifications; track notification.id) {-->
       <button mat-menu-item class="p-x-32 p-y-16">
         <div class="d-flex align-items-center">
-          <img [src]="notification.user.imagePath" class="rounded-circle" width="48"/>
+          <img [src]="user.imagePath" class="rounded-circle" width="48"/>
           <div class="m-l-16">
             <h5 class="f-s-14 f-w-600 m-0 ">
-              {{ notification.notification.title }}
+              Calendar alert !
             </h5>
-            <span>{{ notification.notification.message }}</span>
+            <span>Please note that two or more engineers working on the TIGER project have scheduled absences on the same date.</span>
           </div>
         </div>
       </button>
-    }
+<!--    }-->
 
     <div class="p-y-12 p-x-32">
       <button mat-stroked-button color="primary" class="w-100">

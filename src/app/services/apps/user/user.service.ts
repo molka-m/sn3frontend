@@ -40,12 +40,12 @@ export class UserService {
     return this.http.delete<any>(`${this.backendUrl}/delete/` + uuid);
   }
 
-  lockUserAccount(email: string): Observable<any> {
-    return this.http.put<any>(`${this.backendUrl}/lockAccount/` + email, null);
+  lockUserAccount(email: string | undefined): Observable<any> {
+    return this.http.get<any>(`${this.backendUrl}/lock-user/` + email);
   }
 
-  unLockUserAccount(email: string): Observable<any> {
-    return this.http.put<any>(`${this.backendUrl}/unLockAccount/` + email, null);
+  unLockUserAccount(email: string | undefined): Observable<any> {
+    return this.http.get<any>(`${this.backendUrl}/unLock-user/` + email);
   }
 
   findByGroupUUID(uuid: string | undefined): Observable<User[]> {

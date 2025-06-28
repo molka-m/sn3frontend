@@ -216,6 +216,31 @@ export class AppUserDialogContentComponent {
           this.openSnackBar('Failed to delete user!', 'Close');
         }
       );
+    }else if (this.action === 'lock' && this.user.uuid ) {
+      this.userService.lockUserAccount(this.user.email).subscribe(
+        () => {
+          // Only close the dialog and show the snackbar after deletion succeeds
+          this.dialogRef.close({ event: 'lock' });
+          this.openSnackBar('user Locked successfully!', 'Close');
+        },
+        (error) => {
+          console.error('Error lock user:', error);
+          this.openSnackBar('Failed to lock user!', 'Close');
+        }
+      );
+    }
+    else if (this.action === 'unlock' && this.user.uuid ) {
+      this.userService.unLockUserAccount(this.user.email).subscribe(
+        () => {
+          // Only close the dialog and show the snackbar after deletion succeeds
+          this.dialogRef.close({ event: 'unlock' });
+          this.openSnackBar('user unlocked successfully!', 'Close');
+        },
+        (error) => {
+          console.error('Error lock user:', error);
+          this.openSnackBar('Failed to unlock user!', 'Close');
+        }
+      );
     }
   }
 

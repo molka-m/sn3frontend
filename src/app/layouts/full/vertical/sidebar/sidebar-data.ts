@@ -29,7 +29,7 @@ export const navItems: NavItem[] = [
     displayName: 'Application',
     iconName: 'brand-ctemplar',
     route: 'apps/application',
-    roles: ['ADMIN', 'RDP','INGENIEUR']
+    roles: ['RDP','INGENIEUR']
 
   },
   {
@@ -43,7 +43,7 @@ export const navItems: NavItem[] = [
     displayName: 'Group',
     iconName: 'phone',
     route: 'apps/group',
-    roles: ['ADMIN', 'RDP','INGENIEUR']
+    roles: ['RDP','INGENIEUR']
 
   },
   /*  {

@@ -13,7 +13,7 @@
 <!-- Add Employee -->
 <!-- -------------------------------------------------------------- -->
 
-@if (action !== 'Delete') {
+@if (action !== 'Delete' && action!= 'lock'  && action != 'unlock' ) {
   <mat-dialog-content>
     <form #userForm="ngForm">
       <div class="d-flex align-items-center m-b-16">
@@ -188,7 +188,7 @@
 @else {
   <div class="p-x-24 m-y-8">
     <p class="f-s-14">
-      Sure to delete <span class="f-w-600">{{ user.firstName }}</span> ?
+      Sure to {{action}} <span class="f-w-600">{{ user.firstName }}</span> ?
     </p>
   </div>
   <div mat-dialog-actions class="p-x-24 p-b-24">
