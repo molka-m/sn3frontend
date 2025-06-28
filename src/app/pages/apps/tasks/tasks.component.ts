@@ -14,6 +14,7 @@ import {Observable} from "rxjs";
 import {RouterLink} from "@angular/router";
 import {User} from "../../../services/models/user";
 import {UserService} from "../../../services/apps/user/user.service";
+import {TaskAddApplicationComponent} from "./add/add.component";
 
 @Component({
   selector: 'app-task-list',
@@ -214,7 +215,7 @@ export class TaskDialogComponent {
         console.log("Task created successfully:", createdTask);
         // Close the dialog only after user creation
         // Open success dialog
-        const successDialogRef = this.dialog.open(AppAddApplicationComponent);
+        const successDialogRef = this.dialog.open(TaskAddApplicationComponent);
         successDialogRef.afterClosed().subscribe(() => {
           this.dialogRef.close({event: 'Refresh'});
           this.openSnackBar('Task Added successfully!', 'Close');

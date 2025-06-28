@@ -143,7 +143,7 @@ export class AppUserDialogContentComponent {
   // tslint:disable-next-line - Disables all
   user: User;
   selectedImage: any = '';
-  roles: string[] = ['RDP', 'INGENIEUR', 'ADMIN'];
+  roles: string[] = ['RDP', 'INGENIEUR'];
   joiningDate = new FormControl();
 
   constructor(
