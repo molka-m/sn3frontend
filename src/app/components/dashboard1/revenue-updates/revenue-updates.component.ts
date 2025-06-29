@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   ApexChart,
   ChartComponent,
@@ -17,6 +17,7 @@ import {
 } from 'ng-apexcharts';
 import { MaterialModule } from '../../../material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
+import {DashboardService} from "../../../services/apps/dashboard.service";
 
 interface month {
   value: string;
@@ -43,94 +44,98 @@ export interface revenueChart {
   imports: [NgApexchartsModule, MaterialModule, TablerIconsModule],
   templateUrl: './revenue-updates.component.html',
 })
-export class AppRevenueUpdatesComponent {
+export class AppRevenueUpdatesComponent implements OnInit {
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
 
   public revenueChart!: Partial<revenueChart> | any;
-
+  public analyticsData : any ;
   months: month[] = [
     { value: 'mar', viewValue: 'March 2025' },
     { value: 'apr', viewValue: 'April 2025' },
     { value: 'june', viewValue: 'June 2025' },
   ];
 
-  constructor() {
-    this.revenueChart = {
-      series: [
-        {
-          name: 'Eanings this month',
-          data: [1.5, 2.7, 2.2, 3.6, 1.5, 1.0],
-          color: '#5D87FF',
-        },
-        {
-          name: 'Expense this month',
-          data: [-1.8, -1.1, -2.5, -1.5, -0.6, -1.8],
-          color: '#49BEFF',
-        },
-      ],
+  constructor(private apiService : DashboardService) {
+  }
 
-      chart: {
-        type: 'bar',
-        fontFamily: "'Plus Jakarta Sans', sans-serif;",
-        foreColor: '#adb0bb',
-        toolbar: {
-          show: false,
-        },
-        height: 340,
-        stacked: true,
-      },
+  ngOnInit(): void {
+    this.apiService.getDashboardAnalytics().subscribe((data) => {
+      const ticketsMap: Record<string, number> = data.nbrOfTicketsPerUser;
+      this.analyticsData = data;
+      const usernames = Object.keys(ticketsMap); // ["john", "jane"]
+      const ticketCounts = Object.values(ticketsMap); // [4, 2]
 
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '20%',
-          borderRadius: [6],
-          borderRadiusApplication: 'end',
-          borderRadiusWhenStacked: 'all',
-        },
-      },
+      this.revenueChart = {
+        series: [
+          {
+            name: 'Tickets per User',
+            data: ticketCounts, // Ticket counts
+            color: '#5D87FF',
+          },
+        ],
 
-      stroke: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      legend: {
-        show: false,
-      },
-      grid: {
-        borderColor: 'rgba(0,0,0,0.1)',
-        strokeDashArray: 3,
-        xaxis: {
-          lines: {
+        chart: {
+          type: 'bar',
+          fontFamily: "'Plus Jakarta Sans', sans-serif;",
+          foreColor: '#adb0bb',
+          toolbar: {
             show: false,
           },
+          height: 340,
         },
-      },
-      yaxis: {
-        min: -5,
-        max: 5,
-        tickAmount: 4,
-      },
-      xaxis: {
-        categories: [
-          '16/08',
-          '17/08',
-          '18/08',
-          '19/08',
-          '20/08',
-          '21/08',
-          '22/08',
-        ],
-        axisBorder: {
+
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '40%',
+            borderRadius: [6],
+            borderRadiusApplication: 'end',
+          },
+        },
+
+        stroke: {
           show: false,
         },
-      },
-      tooltip: {
-        theme: 'dark',
-        fillSeriesColor: false,
-      },
-    };
+
+        dataLabels: {
+          enabled: true, // Show data labels (ticket count on bars)
+        },
+
+        legend: {
+          show: false,
+        },
+
+        grid: {
+          borderColor: 'rgba(0,0,0,0.1)',
+          strokeDashArray: 3,
+        },
+
+        yaxis: {
+          min: 0,
+          tickAmount: 4,
+          title: {
+            text: 'Number of Tickets',
+          },
+        },
+
+        xaxis: {
+          categories: usernames, // Usernames or user identifiers
+          axisBorder: {
+            show: false,
+          },
+          title: {
+            text: 'Users',
+          },
+        },
+
+        tooltip: {
+          theme: 'dark',
+          fillSeriesColor: false,
+        },
+      };
+    });
   }
 }
+
+
+

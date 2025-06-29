@@ -13,6 +13,7 @@ import {
 } from 'ng-apexcharts';
 import { MaterialModule } from '../../../material.module';
 import { TablerIconsModule } from 'angular-tabler-icons';
+import {DashboardService} from "../../../services/apps/dashboard.service";
 
 export interface yearlyChart {
   series: ApexAxisChartSeries;
@@ -33,8 +34,8 @@ export interface yearlyChart {
 export class AppYearlyBreakupComponent {
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
   public yearlyChart!: Partial<yearlyChart> | any;
-
-  constructor() {
+  public analyticsData :any
+  constructor(private apiService : DashboardService) {
     this.yearlyChart = {
       series: [38, 40, 25],
 
@@ -82,4 +83,16 @@ export class AppYearlyBreakupComponent {
       },
     };
   }
+
+  ngOnInit(): void {
+    this.apiService.getDashboardAnalytics().subscribe((data) => {
+      const ticketsMap: Record<string, number> = data.nbrOfTicketsPerUser;
+      this.analyticsData = data;
+
+
+    });
+  }
+
+
+
 }

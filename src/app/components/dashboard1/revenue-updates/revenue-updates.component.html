@@ -2,8 +2,8 @@
   <mat-card-header class="p-b-12">
     <div class="d-flex w-100">
       <div>
-        <mat-card-title>Revenue Updates</mat-card-title>
-        <mat-card-subtitle>Overview of Profit</mat-card-subtitle>
+        <mat-card-title>Tasks Updates</mat-card-title>
+        <mat-card-subtitle>Overview of tasks</mat-card-subtitle>
       </div>
       <div class="m-l-auto">
         <mat-form-field class="theme-select" appearance="outline">
@@ -36,6 +36,7 @@
           [tooltip]="revenueChart.tooltip"
           [plotOptions]="revenueChart.plotOptions"
         ></apx-chart>
+
       </div>
       <div class="col-sm-4">
         <div class="d-flex align-items-center m-t-24">
@@ -46,18 +47,18 @@
           </span>
 
           <div class="m-l-12">
-            <h5 class="f-s-24 m-b-4">$63,489.50</h5>
-            <span class="f-s-14">Total Earnings</span>
+            <h5 class="f-s-24 m-b-4">{{analyticsData.totalNumberOfTickets}}</h5>
+            <span class="f-s-14">Total Number Of tickets</span>
           </div>
         </div>
 
-        <div class="d-flex m-t-32">
+       <!-- <div class="d-flex m-t-32">
           <i-tabler
             name="circle-filled"
             class="text-primary icon-12 m-t-4"
           ></i-tabler>
           <div class="m-l-12">
-            <span class="f-s-14">Earnings this month</span>
+            <span class="f-s-14">On Duty Users</span>
             <h3 class="f-s-18 f-w-600 m-t-4">$48,820</h3>
           </div>
         </div>
@@ -68,10 +69,10 @@
             class="text-secondary icon-12 m-t-4"
           ></i-tabler>
           <div class="m-l-12">
-            <span class="f-s-14">Expense this month</span>
+            <span class="f-s-14"></span>
             <h3 class="f-s-18 f-w-600 m-t-4">$26,498</h3>
           </div>
-        </div>
+        </div>-->
 
         <button mat-flat-button class="w-100 m-t-32">View Full Report</button>
       </div>
